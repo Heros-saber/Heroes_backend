@@ -1,7 +1,11 @@
 package database.architecture.backend.domain.crawling.service;
 
+import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.crawling.dto.pitcher.PitcherStatsDTO;
 import database.architecture.backend.domain.crawling.dto.pitcher.PitcherZoneDTO;
+import database.architecture.backend.domain.entity.Player;
+import database.architecture.backend.domain.entity.Team;
+import database.architecture.backend.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,12 +15,63 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class PitcherCrawlingService {
+    private final PitcherStatRepository pitcherStatRepository;
+    private final PitcherZoneStatRepository zoneStatRepository;
+    private final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
+    private final PlayerCrawlingService playerCrawlingService;
+    private static final Map<String, Integer> positionMap = new HashMap<>();
 
+    static {
+        positionMap.put("P", 1);
+        positionMap.put("C", 2);
+        positionMap.put("1B", 3);
+        positionMap.put("2B", 4);
+        positionMap.put("3B", 5);
+        positionMap.put("SS", 6);
+        positionMap.put("LF", 7);
+        positionMap.put("CF", 8);
+        positionMap.put("RF", 9);
+        positionMap.put("DH", 10);
+    }
+
+    public Integer parsePosition(String pos) {
+        return positionMap.getOrDefault(pos, null);
+    }
+
+    public String savePitcher(String name) throws IOException {
+        Player checkplayer = playerRepository.findPlayerByPlayerName(name);
+        if (checkplayer != null)
+            throw new IllegalArgumentException("이미 등록된 선수입니다.");
+
+        int playerId = playerCrawlingService.getPlayerId(name);
+        PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
+        List<PitcherStatsDTO> pitcherStats = getPitcherStats(playerId);
+        List<PitcherZoneDTO> pitcherZoneStats = getPitcherZoneStats(playerId);
+
+        Team team = teamRepository.findTeamByTeamName(playerInfo.getPlayerTeam());
+        Player player = playerRepository.save(Player.builder()
+                .playerName(name).playerBorn(playerInfo.getPlayerBorn()).playerDraft(playerInfo.getPlayerDraft()).playerPos(parsePosition(playerInfo.getPlayerPos()))
+                .playerThrowSide(playerInfo.isPlayerThrowSide()).playerBattingSide(playerInfo.isPlayerBattingSide()).team(team).build());
+
+        for (PitcherStatsDTO pitcherStat : pitcherStats) {
+            pitcherStatRepository.save(pitcherStat.toEntity(player));
+        }
+
+        for (PitcherZoneDTO pitcherZoneStat : pitcherZoneStats) {
+            zoneStatRepository.save(pitcherZoneStat.toEntity(player));
+        }
+
+        return null;
+
+    }
     public List<PitcherStatsDTO> getPitcherStats(int playerId) throws IOException {
         String url = "https://statiz.sporki.com/player/?m=year&p_no=" + playerId;
         Document doc = Jsoup.connect(url).get();
@@ -125,7 +180,7 @@ public class PitcherCrawlingService {
                         while (pitchingAverages.size() < 25) {
                             pitchingAverages.add(null);
                         }
-                        batterZoneDTOList.add(new PitcherZoneDTO(label, titleText, pitchingAverages));
+                        batterZoneDTOList.add(new PitcherZoneDTO(titleText, label, pitchingAverages));
 
                     }
                 }

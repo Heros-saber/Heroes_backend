@@ -59,7 +59,7 @@ public class PitcherStat {
     private Integer hr;
 
     @Column(nullable = false)
-    private Integer year;
+    private String year;
 
     @Column(nullable = false)
     private Double war;
