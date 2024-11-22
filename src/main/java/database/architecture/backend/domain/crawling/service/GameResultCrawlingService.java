@@ -23,15 +23,14 @@ public class GameResultCrawlingService {
         Document doc = Jsoup.connect(url).get();
         int currentYear = LocalDate.now().getYear();
 
-        // 테이블 본문에서 데이터 추출
         Elements rows = doc.select(".box_cont .table_type03 tbody tr");
         for (Element row : rows) {
-            String yearText = row.select("td").get(0).text(); // 연도 추출
-            if (yearText.contains(String.valueOf(currentYear))) { // 연도가 일치하면
-                int rank = Integer.parseInt(row.select("td div span").text()); // 순위
-                int win = Integer.parseInt(row.select("td").get(3).text()); // 승
-                int draw = Integer.parseInt(row.select("td").get(4).text()); // 무
-                int lose = Integer.parseInt(row.select("td").get(5).text()); // 패
+            String yearText = row.select("td").get(0).text();
+            if (yearText.contains(String.valueOf(currentYear))) {
+                int rank = Integer.parseInt(row.select("td div span").text());
+                int win = Integer.parseInt(row.select("td").get(3).text());
+                int draw = Integer.parseInt(row.select("td").get(4).text());
+                int lose = Integer.parseInt(row.select("td").get(5).text());
                 return new TeamRankDTO(rank, win, lose, draw);
             }
         }
