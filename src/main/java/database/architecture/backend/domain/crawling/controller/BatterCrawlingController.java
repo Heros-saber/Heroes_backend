@@ -51,7 +51,7 @@ public class BatterCrawlingController {
     }
 
     @GetMapping("/{playerId}/stats")
-    public ResponseEntity<?> getPitcherStats(@PathVariable int playerId) {
+    public ResponseEntity<?> getBatterStats(@PathVariable int playerId) {
         try{
             return ResponseEntity.ok(batterCrawlingService.getBatterStats(playerId));
         }catch (Exception e){
@@ -60,7 +60,7 @@ public class BatterCrawlingController {
     }
 
     @GetMapping("/{playerId}/zone")
-    public ResponseEntity<?> crawlingPitcherZone(@PathVariable int playerId) {
+    public ResponseEntity<?> crawlingBatterZone(@PathVariable int playerId) {
         try{
             return ResponseEntity.ok(batterCrawlingService.getBatterZoneStats(playerId));
         } catch (Exception e){
