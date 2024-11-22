@@ -1,9 +1,9 @@
-package database.architecture.backend.service;
+package database.architecture.backend.domain.crawling.service;
 
-import database.architecture.backend.dto.PlayerInfoDTO;
-import database.architecture.backend.dto.PlayerStatsDTO;
-import database.architecture.backend.dto.PlayerZoneDTO;
-import database.architecture.backend.utils.WebDriverUtils;
+import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
+import database.architecture.backend.domain.crawling.dto.PlayerZoneDTO;
+import database.architecture.backend.domain.crawling.utils.WebDriverUtils;
+import database.architecture.backend.domain.crawling.dto.PlayerStatsDTO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

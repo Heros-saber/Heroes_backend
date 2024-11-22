@@ -1,9 +1,9 @@
-package database.architecture.backend.controller;
+package database.architecture.backend.domain.crawling.controller;
 
-import database.architecture.backend.dto.PlayerInfoDTO;
-import database.architecture.backend.dto.PlayerStatsDTO;
-import database.architecture.backend.dto.PlayerZoneDTO;
-import database.architecture.backend.service.PlayerService;
+import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
+import database.architecture.backend.domain.crawling.dto.PlayerStatsDTO;
+import database.architecture.backend.domain.crawling.dto.PlayerZoneDTO;
+import database.architecture.backend.domain.crawling.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

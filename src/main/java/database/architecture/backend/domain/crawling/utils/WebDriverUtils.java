@@ -1,4 +1,4 @@
-package database.architecture.backend.utils;
+package database.architecture.backend.domain.crawling.utils;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
