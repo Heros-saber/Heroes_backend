@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.crawling.dto;
+package database.architecture.backend.domain.crawling.dto.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
