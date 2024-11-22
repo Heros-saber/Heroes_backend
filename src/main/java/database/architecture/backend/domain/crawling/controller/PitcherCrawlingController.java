@@ -38,7 +38,7 @@ public class PitcherCrawlingController {
     }
 
     @GetMapping("/{playerId}/stats")
-    public ResponseEntity<?> getBatterStats(@PathVariable int playerId) throws IOException {
+    public ResponseEntity<?> getPitcherStats(@PathVariable int playerId) throws IOException {
         try{
             return ResponseEntity.ok(pitcherCrawlingService.getPitcherStats(playerId));
         }catch (Exception e){
@@ -47,7 +47,7 @@ public class PitcherCrawlingController {
     }
 
     @GetMapping("/{playerId}/zone")
-    public ResponseEntity<?> crawlingBatterZone(@PathVariable int playerId) {
+    public ResponseEntity<?> crawlingPitcherZone(@PathVariable int playerId) {
         try{
             return ResponseEntity.ok(pitcherCrawlingService.getPitcherZoneStats(playerId));
         } catch (Exception e){
