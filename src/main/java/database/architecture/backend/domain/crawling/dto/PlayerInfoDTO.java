@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PlayerInfoDTO {
+    private String playerTeam;
     private String playerBorn;
     private String playerDraft;
     private String playerPos;

@@ -48,13 +48,14 @@ public class PlayerCrawlingService {
             String value = detail.parent().ownText().trim();
             info.put(label, value);
         }
-
+        String playerTeam = doc.select("div.con span").get(0).text();
         String position = doc.select("div.con span").get(1).text();
         String battingThrow = doc.select("div.con span").get(2).text();
         boolean battingSide = battingThrow.contains("우타");
         boolean throwingSide = battingThrow.contains("우투");
 
         return new PlayerInfoDTO(
+                playerTeam,
                 info.getOrDefault("생년월일", "정보 없음"),
                 info.getOrDefault("신인지명", "정보 없음"),
                 position,
