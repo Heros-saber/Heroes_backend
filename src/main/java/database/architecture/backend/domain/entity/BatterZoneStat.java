@@ -22,6 +22,10 @@ public class BatterZoneStat {
     @Column(nullable = false)
     private String circumstance;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playerId")
+    private Player player;
+
     private Double zone1;
     private Double zone2;
     private Double zone3;

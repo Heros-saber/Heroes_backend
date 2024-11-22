@@ -3,6 +3,12 @@ package database.architecture.backend.domain.crawling.service;
 import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
+import database.architecture.backend.domain.entity.BatterStat;
+import database.architecture.backend.domain.entity.Player;
+import database.architecture.backend.domain.repository.BatterStatRepository;
+import database.architecture.backend.domain.repository.BatterZoneStatRepository;
+import database.architecture.backend.domain.repository.PlayerRepository;
+import database.architecture.backend.domain.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,13 +19,39 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class BatterCrawlingService {
+    private final BatterStatRepository batterStatRepository;
+    private final BatterZoneStatRepository zoneStatRepository;
+    private final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
+    private static final Map<String, Integer> positionMap = new HashMap<>();
 
-    public PlayerInfoDTO saveBatter(PlayerInfoDTO playerInfo, List<BatterStatsDTO> batterStats, List<BatterZoneDTO> batterZoneStats){
+    static {
+        positionMap.put("P", 1);  // Pitcher
+        positionMap.put("C", 2);  // Catcher
+        positionMap.put("1B", 3); // First Base
+        positionMap.put("2B", 4); // Second Base
+        positionMap.put("3B", 5); // Third Base
+        positionMap.put("SS", 6); // Shortstop
+        positionMap.put("LF", 7); // Left Field
+        positionMap.put("CF", 8); // Center Field
+        positionMap.put("RF", 9); // Right Field
+        positionMap.put("DH", 10); // Designated Hitter
+    }
+
+    public Integer parsePosition(String pos) {
+        return positionMap.getOrDefault(pos, null);
+    }
+    public PlayerInfoDTO saveBatter(String name, PlayerInfoDTO playerInfo, List<BatterStatsDTO> batterStats, List<BatterZoneDTO> batterZoneStats){
+        playerRepository.save(Player.builder()
+                .playerName(name).playerBorn(playerInfo.getPlayerBorn()).playerDraft(playerInfo.getPlayerDraft()).playerPos(parsePosition(playerInfo.getPlayerPos()))
+                .playerThrowSide(playerInfo.isPlayerThrowSide()).playerBattingSide(playerInfo.isPlayerBattingSide()).build());
         return null;
     }
     public List<BatterStatsDTO> getBatterStats(int playerId) throws IOException {

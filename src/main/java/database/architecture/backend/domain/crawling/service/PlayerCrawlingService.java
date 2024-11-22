@@ -9,6 +9,8 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -56,7 +58,7 @@ public class PlayerCrawlingService {
 
         return new PlayerInfoDTO(
                 playerTeam,
-                info.getOrDefault("생년월일", "정보 없음"),
+                parseLocalDate(info.getOrDefault("생년월일", "정보 없음")),
                 info.getOrDefault("신인지명", "정보 없음"),
                 position,
                 battingSide,
@@ -64,4 +66,8 @@ public class PlayerCrawlingService {
         );
     }
 
+    private LocalDate parseLocalDate(String born){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+        return LocalDate.parse(born, formatter);
+    }
 }

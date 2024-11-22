@@ -26,9 +26,9 @@ public class Team {
     @Column(nullable = false)
     private LocalDate teamFounded;
 
-    @OneToMany(mappedBy = "playerTeam")
-    private List<Player> teamPlayers;
+    @OneToMany(mappedBy = "team")
+    private List<Player> player;
 
     @OneToMany(mappedBy = "team")
-    private List<MatchRecord> teamMatch;
+    private List<MatchRecord> matchRecord;
 }

@@ -21,12 +21,12 @@ public class HeroesRecord {
     @Column(nullable = false)
     private Integer draw;
     @Column(nullable = false)
-    private Integer rank;
+    private Integer ranking;
 
-    public void updateHeroesRecord(Integer win, Integer lose, Integer draw, Integer rank){
+    public void updateHeroesRecord(Integer win, Integer lose, Integer draw, Integer ranking){
         this.win = win;
         this.lose = lose;
         this.draw = draw;
-        this.rank = rank;
+        this.ranking = ranking;
     }
 }

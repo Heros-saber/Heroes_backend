@@ -23,7 +23,7 @@ public class Player {
     private LocalDate playerBorn;
 
     @Column(nullable = false)
-    private LocalDate playerDraft;
+    private String playerDraft;
 
     @Column(nullable = false)
     private Integer playerPos;
@@ -36,15 +36,20 @@ public class Player {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamId")
-    private Team playerTeam;
+    private Team team;
 
-    @OneToMany(mappedBy = "pitcherRecord")
-    private List<PitcherStat> pitcherStatList;
+    @OneToMany(mappedBy = "player")
+    private List<PitcherStat> pitcherStat;
 
-    @OneToMany(mappedBy = "batterRecord")
-    private List<BatterStat> batterStatList;
+    @OneToMany(mappedBy = "player")
+    private List<BatterStat> batterStat;
 
+    @OneToMany(mappedBy = "player")
+    private List<PitcherZoneStat> pitcherZoneStat;
+
+    @OneToMany(mappedBy = "player")
+    private List<BatterZoneStat> batterZoneStat;
     public void updateTeam(Team playerTeam){
-        this.playerTeam = playerTeam;
+        this.team = playerTeam;
     }
 }

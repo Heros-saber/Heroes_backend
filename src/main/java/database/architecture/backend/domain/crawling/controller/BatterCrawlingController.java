@@ -20,13 +20,13 @@ public class BatterCrawlingController {
     private final BatterCrawlingService batterCrawlingService;
 
     @GetMapping("/{name}")
-    public ResponseEntity<?> getBatter(@PathVariable String name) {
+    public ResponseEntity<?> saveBatter(@PathVariable String name) {
         try{
             int playerId = playerCrawlingService.getPlayerId(name);
             PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
             List<BatterStatsDTO> batterStats = batterCrawlingService.getBatterStats(playerId);
             List<BatterZoneDTO> batterZoneStats = batterCrawlingService.getBatterZoneStats(playerId);
-            return ResponseEntity.ok(playerCrawlingService.getPlayerId(name));
+            return ResponseEntity.ok(batterCrawlingService.saveBatter(name, playerInfo, batterStats, batterZoneStats));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
