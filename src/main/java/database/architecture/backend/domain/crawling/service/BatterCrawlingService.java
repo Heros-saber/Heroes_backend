@@ -1,8 +1,8 @@
 package database.architecture.backend.domain.crawling.service;
 
 import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
-import database.architecture.backend.domain.crawling.dto.BatterZoneDTO;
-import database.architecture.backend.domain.crawling.dto.BatterStatsDTO;
+import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
+import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

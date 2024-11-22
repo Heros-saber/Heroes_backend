@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.crawling;
+package database.architecture.backend.domain.crawling.controller;
 
 import database.architecture.backend.domain.crawling.dto.GameResultDTO;
 import org.springframework.web.bind.annotation.GetMapping;
