@@ -40,11 +40,11 @@ public class BatterCrawlingService {
                 boolean isYearMissing = !year.matches("\\d{4}");
                 if (isYearMissing) {
                     stats.setYear(year);
-                    stats.setHAvg(parseFloat(cells.get(25).text()));
-                    stats.setObp(parseFloat(cells.get(26).text()));
-                    stats.setSlg(parseFloat(cells.get(27).text()));
-                    stats.setOps(parseFloat(cells.get(28).text()));
-                    stats.setWrcPlus(parseFloat(cells.get(30).text()));
+                    stats.setHAvg(parseDouble(cells.get(25).text()));
+                    stats.setObp(parseDouble(cells.get(26).text()));
+                    stats.setSlg(parseDouble(cells.get(27).text()));
+                    stats.setOps(parseDouble(cells.get(28).text()));
+                    stats.setWrcPlus(parseDouble(cells.get(30).text()));
                     stats.setH(parseInt(cells.get(10).text()));
                     stats.setTwoB(parseInt(cells.get(11).text()));
                     stats.setThreeB(parseInt(cells.get(12).text()));
@@ -55,14 +55,14 @@ public class BatterCrawlingService {
                     stats.setSo(parseInt(cells.get(21).text()));
                     stats.setPa(parseInt(cells.get(6).text()));
                     stats.setAb(parseInt(cells.get(8).text()));
-                    stats.setWar(parseFloat(cells.get(31).text()));
+                    stats.setWar(parseDouble(cells.get(31).text()));
                 } else {
                     stats.setYear(year);
-                    stats.setHAvg(parseFloat(cells.get(26).text()));
-                    stats.setObp(parseFloat(cells.get(27).text()));
-                    stats.setSlg(parseFloat(cells.get(28).text()));
-                    stats.setOps(parseFloat(cells.get(29).text()));
-                    stats.setWrcPlus(parseFloat(cells.get(31).text()));
+                    stats.setHAvg(parseDouble(cells.get(26).text()));
+                    stats.setObp(parseDouble(cells.get(27).text()));
+                    stats.setSlg(parseDouble(cells.get(28).text()));
+                    stats.setOps(parseDouble(cells.get(29).text()));
+                    stats.setWrcPlus(parseDouble(cells.get(31).text()));
                     stats.setH(parseInt(cells.get(11).text()));
                     stats.setTwoB(parseInt(cells.get(12).text()));
                     stats.setThreeB(parseInt(cells.get(13).text()));
@@ -73,7 +73,7 @@ public class BatterCrawlingService {
                     stats.setSo(parseInt(cells.get(22).text()));
                     stats.setPa(parseInt(cells.get(7).text()));
                     stats.setAb(parseInt(cells.get(9).text()));
-                    stats.setWar(parseFloat(cells.get(32).text()));
+                    stats.setWar(parseDouble(cells.get(32).text()));
                 }
 
                 statsList.add(stats);
@@ -82,8 +82,9 @@ public class BatterCrawlingService {
         return statsList;
     }
 
-    private float parseFloat(String text) {
-        return text.isEmpty() ? 0.0f : Float.parseFloat(text);
+    private double parseDouble(String text) {
+        double value = text.isEmpty() ? 0.0f : Float.parseFloat(text);
+        return Double.parseDouble(String.format("%.4f", value));
     }
 
     private int parseInt(String text) {

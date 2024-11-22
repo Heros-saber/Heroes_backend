@@ -43,8 +43,8 @@ public class PitcherCrawlingService {
                     stats.setLose(parseInt(cells.get(11).text()));
                     stats.setSave(parseInt(cells.get(12).text()));
                     stats.setHold(parseInt(cells.get(13).text()));
-                    stats.setIp(parseFloat(cells.get(14).text()));
-                    stats.setEra(parseFloat(cells.get(30).text()));
+                    stats.setIp(parseDouble(cells.get(14).text()));
+                    stats.setEra(parseDouble(cells.get(30).text()));
                     stats.setEr(parseInt(cells.get(15).text()));
                     stats.setTbf(parseInt(cells.get(18).text()));
                     stats.setH(parseInt(cells.get(19).text()));
@@ -53,8 +53,8 @@ public class PitcherCrawlingService {
                     stats.setHr(parseInt(cells.get(22).text()));
                     stats.setBb(parseInt(cells.get(23).text()) + parseInt(cells.get(24).text()) + parseInt(cells.get(25).text()));  // BB, HP, IB
                     stats.setSo(parseInt(cells.get(26).text()));
-                    stats.setWhip(parseFloat(cells.get(34).text()));
-                    stats.setWar(parseFloat(cells.get(35).text()));
+                    stats.setWhip(parseDouble(cells.get(34).text()));
+                    stats.setWar(parseDouble(cells.get(35).text()));
                 } else {
                     stats.setYear(year);
                     stats.setGames(parseInt(cells.get(3).text()));
@@ -62,8 +62,8 @@ public class PitcherCrawlingService {
                     stats.setLose(parseInt(cells.get(10).text()));
                     stats.setSave(parseInt(cells.get(11).text()));
                     stats.setHold(parseInt(cells.get(12).text()));
-                    stats.setIp(parseFloat(cells.get(13).text()));
-                    stats.setEra(parseFloat(cells.get(29).text()));
+                    stats.setIp(parseDouble(cells.get(13).text()));
+                    stats.setEra(parseDouble(cells.get(29).text()));
                     stats.setEr(parseInt(cells.get(14).text()));
                     stats.setTbf(parseInt(cells.get(17).text()));
                     stats.setH(parseInt(cells.get(18).text()));
@@ -72,8 +72,8 @@ public class PitcherCrawlingService {
                     stats.setHr(parseInt(cells.get(21).text()));
                     stats.setBb(parseInt(cells.get(22).text()) + parseInt(cells.get(23).text()) + parseInt(cells.get(24).text()));  // BB, HP, IB
                     stats.setSo(parseInt(cells.get(25).text()));
-                    stats.setWhip(parseFloat(cells.get(33).text()));
-                    stats.setWar(parseFloat(cells.get(34).text()));
+                    stats.setWhip(parseDouble(cells.get(33).text()));
+                    stats.setWar(parseDouble(cells.get(34).text()));
                 }
                 statsList.add(stats);
             }
@@ -81,8 +81,9 @@ public class PitcherCrawlingService {
         return statsList;
     }
 
-    private float parseFloat(String text) {
-        return text.isEmpty() ? 0.0f : Float.parseFloat(text);
+    private double parseDouble(String text) {
+        double value = text.isEmpty() ? 0.0f : Float.parseFloat(text);
+        return Double.parseDouble(String.format("%.3f", value));
     }
 
     private int parseInt(String text) {

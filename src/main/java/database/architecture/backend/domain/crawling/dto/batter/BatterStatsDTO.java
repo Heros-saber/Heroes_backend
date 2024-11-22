@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class BatterStatsDTO {
     private String year;
-    private float hAvg;
-    private float obp;
-    private float slg;
-    private float ops;
-    private float wrcPlus;
+    private double hAvg;
+    private double obp;
+    private double slg;
+    private double ops;
+    private double wrcPlus;
     private int h;
     private int twoB;
     private int threeB;
@@ -20,5 +20,5 @@ public class BatterStatsDTO {
     private int so;
     private int pa;
     private int ab;
-    private float war;
+    private double war;
 }
