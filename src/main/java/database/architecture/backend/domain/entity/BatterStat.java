@@ -27,7 +27,7 @@ public class BatterStat {
     private Double obp;
 
     @Column(nullable = false)
-    private Double wrc_plus;
+    private Double wrcPlus;
 
     @Column(nullable = false)
     private Double war;
@@ -63,7 +63,7 @@ public class BatterStat {
     private Integer so;
 
     @Column(nullable = false)
-    private Integer year;
+    private String year;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playerId")

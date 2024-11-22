@@ -5,6 +5,7 @@ import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
 import database.architecture.backend.domain.entity.BatterStat;
 import database.architecture.backend.domain.entity.Player;
+import database.architecture.backend.domain.entity.Team;
 import database.architecture.backend.domain.repository.BatterStatRepository;
 import database.architecture.backend.domain.repository.BatterZoneStatRepository;
 import database.architecture.backend.domain.repository.PlayerRepository;
@@ -30,28 +31,48 @@ public class BatterCrawlingService {
     private final BatterZoneStatRepository zoneStatRepository;
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
+    private final PlayerCrawlingService playerCrawlingService;
     private static final Map<String, Integer> positionMap = new HashMap<>();
 
     static {
-        positionMap.put("P", 1);  // Pitcher
-        positionMap.put("C", 2);  // Catcher
-        positionMap.put("1B", 3); // First Base
-        positionMap.put("2B", 4); // Second Base
-        positionMap.put("3B", 5); // Third Base
-        positionMap.put("SS", 6); // Shortstop
-        positionMap.put("LF", 7); // Left Field
-        positionMap.put("CF", 8); // Center Field
-        positionMap.put("RF", 9); // Right Field
-        positionMap.put("DH", 10); // Designated Hitter
+        positionMap.put("P", 1);
+        positionMap.put("C", 2);
+        positionMap.put("1B", 3);
+        positionMap.put("2B", 4);
+        positionMap.put("3B", 5);
+        positionMap.put("SS", 6);
+        positionMap.put("LF", 7);
+        positionMap.put("CF", 8);
+        positionMap.put("RF", 9);
+        positionMap.put("DH", 10);
     }
 
     public Integer parsePosition(String pos) {
         return positionMap.getOrDefault(pos, null);
     }
-    public PlayerInfoDTO saveBatter(String name, PlayerInfoDTO playerInfo, List<BatterStatsDTO> batterStats, List<BatterZoneDTO> batterZoneStats){
-        playerRepository.save(Player.builder()
+    public PlayerInfoDTO saveBatter(String name) throws IOException {
+        Player checkplayer = playerRepository.findPlayerByPlayerName(name);
+        if (checkplayer != null)
+            throw new IllegalArgumentException("이미 등록된 선수입니다.");
+
+        int playerId = playerCrawlingService.getPlayerId(name);
+        PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
+        List<BatterStatsDTO> batterStats = getBatterStats(playerId);
+        List<BatterZoneDTO> batterZoneStats = getBatterZoneStats(playerId);
+
+        Team team = teamRepository.findTeamByTeamName(playerInfo.getPlayerTeam());
+        Player player = playerRepository.save(Player.builder()
                 .playerName(name).playerBorn(playerInfo.getPlayerBorn()).playerDraft(playerInfo.getPlayerDraft()).playerPos(parsePosition(playerInfo.getPlayerPos()))
-                .playerThrowSide(playerInfo.isPlayerThrowSide()).playerBattingSide(playerInfo.isPlayerBattingSide()).build());
+                .playerThrowSide(playerInfo.isPlayerThrowSide()).playerBattingSide(playerInfo.isPlayerBattingSide()).team(team).build());
+
+        for (BatterStatsDTO batterStat : batterStats) {
+            batterStatRepository.save(batterStat.toEntity(player));
+        }
+
+        for (BatterZoneDTO batterZoneStat : batterZoneStats) {
+            zoneStatRepository.save(batterZoneStat.toEntity(player));
+        }
+
         return null;
     }
     public List<BatterStatsDTO> getBatterStats(int playerId) throws IOException {
@@ -163,7 +184,7 @@ public class BatterCrawlingService {
                         while (pitchingAverages.size() < 25) {
                             pitchingAverages.add(null);
                         }
-                        playerDataDTOList.add(new BatterZoneDTO(label, titleText, pitchingAverages));
+                        playerDataDTOList.add(new BatterZoneDTO(titleText, label, pitchingAverages));
 
                     }
                 }
