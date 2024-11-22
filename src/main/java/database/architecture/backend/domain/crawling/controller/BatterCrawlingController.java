@@ -1,6 +1,7 @@
 package database.architecture.backend.domain.crawling.controller;
 
 import database.architecture.backend.domain.crawling.service.BatterCrawlingService;
+import database.architecture.backend.domain.crawling.service.PlayerCrawlingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/crawling/batter")
 public class BatterCrawlingController {
+    private final PlayerCrawlingService playerCrawlingService;
     private final BatterCrawlingService batterCrawlingService;
 
     @GetMapping("/{name}/id")
     public ResponseEntity<?> getPlayerId(@PathVariable String name) {
         try{
-            return ResponseEntity.ok(batterCrawlingService.getPlayerId(name));
+            return ResponseEntity.ok(playerCrawlingService.getPlayerId(name));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -25,7 +27,7 @@ public class BatterCrawlingController {
     @GetMapping("/{playerId}/info")
     public ResponseEntity<?> getPlayerInfo(@PathVariable int playerId) {
         try{
-            return ResponseEntity.ok(batterCrawlingService.getPlayerInfo(playerId));
+            return ResponseEntity.ok(playerCrawlingService.getPlayerInfo(playerId));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
