@@ -11,10 +11,10 @@ import lombok.*;
 public class BatterZoneStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int zoneStatId;
+    private Integer zoneStatId;
 
     @Column(nullable = false)
-    private int year;
+    private Integer year;
 
     @Column(nullable = false)
     private String tag;

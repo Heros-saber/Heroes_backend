@@ -11,27 +11,33 @@ import lombok.*;
 public class MatchRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int matchId;
+    private Long matchId;
 
     @Column(nullable = false)
-    private int year;
+    private Integer year;
 
     @Column(nullable = false)
-    private int month;
+    private Integer month;
 
     @Column(nullable = false)
-    private int day;
+    private Integer day;
 
-    @Column(nullable = false)
-    private int heroesScore;
+    private Integer heroesScore;
 
-    @Column(nullable = false)
-    private int oppoScore;
+    private Integer oppoScore;
 
-    private boolean win;
+    private Boolean win;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamId")
     private Team team;
 
+    public void update(int year, int month, int day, int heroesScore, int oppoScore){
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.heroesScore = heroesScore;
+        this.oppoScore = oppoScore;
+
+    }
 }

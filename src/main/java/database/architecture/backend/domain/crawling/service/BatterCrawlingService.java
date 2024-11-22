@@ -20,7 +20,6 @@ import java.util.List;
 public class BatterCrawlingService {
 
     public PlayerInfoDTO saveBatter(PlayerInfoDTO playerInfo, List<BatterStatsDTO> batterStats, List<BatterZoneDTO> batterZoneStats){
-
         return null;
     }
     public List<BatterStatsDTO> getBatterStats(int playerId) throws IOException {

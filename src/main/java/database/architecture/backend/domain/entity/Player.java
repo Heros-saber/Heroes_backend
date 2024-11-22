@@ -14,7 +14,7 @@ import java.util.List;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int playerId;
+    private Integer playerId;
 
     @Column(nullable = false)
     private String playerName;
@@ -26,13 +26,13 @@ public class Player {
     private LocalDate playerDraft;
 
     @Column(nullable = false)
-    private int playerPos;
+    private Integer playerPos;
 
     @Column(nullable = false)
-    private boolean playerBattingSide;
+    private Boolean playerBattingSide;
 
     @Column(nullable = false)
-    private boolean playerThrowSide;
+    private Boolean playerThrowSide;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamId")
@@ -43,4 +43,8 @@ public class Player {
 
     @OneToMany(mappedBy = "batterRecord")
     private List<BatterStat> batterStatList;
+
+    public void updateTeam(Team playerTeam){
+        this.playerTeam = playerTeam;
+    }
 }

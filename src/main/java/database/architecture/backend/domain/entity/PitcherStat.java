@@ -11,61 +11,61 @@ import lombok.*;
 public class PitcherStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int statId;
+    private Integer statId;
 
     @Column(nullable = false)
-    private int games;
+    private Integer games;
 
     @Column(nullable = false)
-    private int win;
+    private Integer win;
 
     @Column(nullable = false)
-    private int lose;
+    private Integer lose;
 
     @Column(nullable = false)
-    private int save;
+    private Integer save;
 
     @Column(nullable = false)
-    private int hold;
+    private Integer hold;
 
     @Column(nullable = false)
-    private int tbf;
+    private Integer tbf;
 
     @Column(nullable = false)
-    private double ip;
+    private Double ip;
 
     @Column(nullable = false)
-    private double era;
+    private Double era;
 
     @Column(nullable = false)
-    private int er;
+    private Integer er;
 
     @Column(nullable = false)
-    private int so;
+    private Integer so;
 
     @Column(nullable = false)
-    private int bb;
+    private Integer bb;
 
     @Column(nullable = false)
-    private int hit;
+    private Integer hit;
 
     @Column(nullable = false)
-    private int h_double;
+    private Integer h_double;
 
     @Column(nullable = false)
-    private int triple;
+    private Integer triple;
 
     @Column(nullable = false)
-    private int hr;
+    private Integer hr;
 
     @Column(nullable = false)
-    private int year;
+    private Integer year;
 
     @Column(nullable = false)
-    private double war;
+    private Double war;
 
     @Column(nullable = false)
-    private double whip;
+    private Double whip;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playerId")

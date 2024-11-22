@@ -13,13 +13,13 @@ import lombok.*;
 public class HeroesRecord {
     @Id
     @Column(nullable = false)
-    private int year;
+    private Integer year;
     @Column(nullable = false)
-    private int win;
+    private Integer win;
     @Column(nullable = false)
-    private int lose;
+    private Integer lose;
     @Column(nullable = false)
-    private int draw;
+    private Integer draw;
     @Column(nullable = false)
-    private int rank;
+    private Integer rank;
 }
