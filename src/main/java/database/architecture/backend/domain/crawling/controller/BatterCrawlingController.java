@@ -34,7 +34,7 @@ public class BatterCrawlingController {
     }
 
     @GetMapping("/{playerId}/stats")
-    public ResponseEntity<?> getPlayerStats(@PathVariable int playerId) throws IOException {
+    public ResponseEntity<?> getPlayerStats(@PathVariable int playerId) {
         try{
             return ResponseEntity.ok(batterCrawlingService.getPlayerStats(playerId));
         }catch (Exception e){
