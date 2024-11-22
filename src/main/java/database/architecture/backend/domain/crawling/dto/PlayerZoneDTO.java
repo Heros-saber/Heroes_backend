@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerZoneDTO {
-    private String circum;
+    private String circumstance;
     private String label;
     private List<Double[]> data;
 }

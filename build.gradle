@@ -33,8 +33,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	implementation 'com.opencsv:opencsv:5.5'
-	implementation 'org.seleniumhq.selenium:selenium-java:4.12.1'
-	implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.12.1'
+	implementation 'org.seleniumhq.selenium:selenium-java:4.19.1'
 	implementation 'io.github.bonigarcia:webdrivermanager:5.5.3'
 	implementation 'org.jsoup:jsoup:1.15.3'
 }

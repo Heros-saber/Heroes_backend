@@ -2,16 +2,14 @@ package database.architecture.backend.domain.crawling.service;
 
 import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.crawling.dto.PlayerZoneDTO;
-import database.architecture.backend.domain.crawling.utils.WebDriverUtils;
 import database.architecture.backend.domain.crawling.dto.PlayerStatsDTO;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,46 +21,41 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class PlayerService {
+@RequiredArgsConstructor
+public class BatterCrawlingService {
+    private final WebDriver webDriver;
 
+    /**
+     * 선수 이름으로 스탯티즈의 id를 찾는 함수.
+     * 동명이인일 경우는 아직 지원 안함
+     * @return 스탯티즈 Id;
+     */
     public int getPlayerId(String name) {
-        WebDriver driver = WebDriverUtils.createDriver();
-        try {
-            String url = "https://statiz.sporki.com/player/?m=search&s=" + name;
-            driver.get(url);
-            String finalUrl = driver.getCurrentUrl();
-            Pattern pattern = Pattern.compile("p_no=(\\d+)");
-            Matcher matcher = pattern.matcher(finalUrl);
+        String url = "https://statiz.sporki.com/player/?m=search&s=" + name;
+        webDriver.get(url);
+        String finalUrl = webDriver.getCurrentUrl();
+        Pattern pattern = Pattern.compile("p_no=(\\d+)");
+        Matcher matcher = pattern.matcher(finalUrl);
 
-            if (matcher.find()) {
-                return Integer.parseInt(matcher.group(1));
-            }
-            return -1;
-        } finally {
-            driver.quit();
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
         }
+        
+        // 찾지 못한 경우 오류 날림
+        throw new IllegalArgumentException("선수 정보를 찾을 수 없습니다.");
     }
 
-    public PlayerInfoDTO getPlayerInfo(int playerId, String playerName) throws IOException {
+    /**
+     * 선수의 이름, id를 가지고 선수 정보를 크롤링해옴.
+     * @return 선수 정보
+     */
+    public PlayerInfoDTO getPlayerInfo(int playerId){
         String url = "https://statiz.sporki.com/player/?m=playerinfo&p_no=" + playerId;
 
-        // Selenium WebDriver 설정 (헤드리스 모드)
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // 브라우저 창이 나타나지 않음
-        options.addArguments("--disable-gpu");
-        options.addArguments("--no-sandbox");
-
-        WebDriver driver = new ChromeDriver(options);
-        driver.get(url);
-
-        // HTML 페이지 소스 가져오기
-        String pageSource = driver.getPageSource();
-        driver.quit(); // WebDriver 종료
-
-        // Jsoup으로 HTML 파싱
+        webDriver.get(url);
+        String pageSource = webDriver.getPageSource();
         Document doc = Jsoup.parse(pageSource);
 
-        // 생년월일 및 기타 정보 파싱
         Elements details = doc.select("li span");
         Map<String, String> info = new HashMap<>();
         for (Element detail : details) {
@@ -71,21 +64,12 @@ public class PlayerService {
             info.put(label, value);
         }
 
-        // 포지션 및 타격, 투구 정보 파싱
-        String position = "";
-        String battingThrow = "";
-        try {
-            position = doc.select("div.con span").get(1).text();
-            battingThrow = doc.select("div.con span").get(2).text();
-        } catch (IndexOutOfBoundsException e) {
-            System.err.println("포지션 또는 타격/투구 정보를 가져올 수 없습니다.");
-        }
-
+        String position = doc.select("div.con span").get(1).text();
+        String battingThrow = doc.select("div.con span").get(2).text();
         boolean battingSide = battingThrow.contains("우타");
         boolean throwingSide = battingThrow.contains("우투");
 
         return new PlayerInfoDTO(
-                playerName,
                 info.getOrDefault("생년월일", "정보 없음"),
                 info.getOrDefault("신인지명", "정보 없음"),
                 position,
@@ -94,13 +78,17 @@ public class PlayerService {
         );
     }
 
-    public List<PlayerStatsDTO> getPlayerStats(int playerId, String playerName) throws IOException {
+    /**
+     * 선수의 연도별 성적을 크롤링해오는 함수
+     * 하지만 투타 (장재영) 섞인 선수는 불가
+     */
+    public List<PlayerStatsDTO> getPlayerStats(int playerId) throws IOException {
         String url = "https://statiz.sporki.com/player/?m=year&p_no=" + playerId;
         Document doc = Jsoup.connect(url).get();
         Elements rows = doc.select("table tbody tr");
 
         List<PlayerStatsDTO> statsList = new ArrayList<>();
-        for (int i = 0; i < rows.size() - 1; i++) { // 마지막 행을 제외
+        for (int i = 0; i < rows.size() - 1; i++) {
             Element row = rows.get(i);
             Elements cells = row.select("td");
 
@@ -108,15 +96,12 @@ public class PlayerService {
                 PlayerStatsDTO stats = new PlayerStatsDTO();
                 String year = cells.get(0).text().trim();
 
-                // cells.get(0)이 연도가 아닌 경우, index_mapping을 조정
                 if (!year.matches("\\d{4}")) { // 연도가 아닌 경우
                     year = "-";
                 }
 
-                // 연도가 없는 경우, 인덱스를 조정
                 boolean isYearMissing = !year.matches("\\d{4}");
                 if (isYearMissing) {
-                    // "basic_mapping"에서 인덱스를 하나씩 밀어서 맞춤
                     stats.setYear(year);
                     stats.setHAvg(parseFloat(cells.get(25).text()));
                     stats.setObp(parseFloat(cells.get(26).text()));
@@ -135,7 +120,6 @@ public class PlayerService {
                     stats.setAb(parseInt(cells.get(8).text()));
                     stats.setWar(parseFloat(cells.get(31).text()));
                 } else {
-                    // 정상적인 경우, 기본 index_mapping을 사용 하여 데이터를 매핑
                     stats.setYear(year);
                     stats.setHAvg(parseFloat(cells.get(26).text()));
                     stats.setObp(parseFloat(cells.get(27).text()));
@@ -169,7 +153,10 @@ public class PlayerService {
         return text.isEmpty() ? 0 : Integer.parseInt(text);
     }
 
-    public List<PlayerZoneDTO> playerZoneCrawlingAndPreprocessing(String playerId, String name) {
+    /**
+     * 선수들의 히팅존 별 성적을 크롤링 해오는 함수
+     */
+    public List<PlayerZoneDTO> getBatterZoneStats(int playerId) {
         // 매핑
         String[] mapping = {"4", "5", "6", "9"};
         String[] mappingLabels = {"스윙율", "컨택율", "타율", "ops"};
@@ -198,19 +185,18 @@ public class PlayerService {
                         for (Element item : items) {
                             String avgText = item.select("strong").text();
                             try {
-                                battingAverages.add(Double.parseDouble(avgText));  // 문자열을 Double로 변환
+                                battingAverages.add(Double.parseDouble(avgText));
                             } catch (NumberFormatException e) {
-                                battingAverages.add(null);  // 변환 불가 시 null
+                                battingAverages.add(null);
                             }
                         }
 
                         while (battingAverages.size() < 25) {
-                            battingAverages.add(null);  // 25개 미만이면 null로 채움
+                            battingAverages.add(null);
                         }
 
-                        // Double[]로 변환하여 저장
                         Double[] row = new Double[battingAverages.size() + 1];
-                        label = titleText;  // 첫 번째 열은 문자열로 저장
+                        label = titleText;
                         for (int k = 0; k < battingAverages.size(); k++) {
                             row[k] = battingAverages.get(k);
                         }
@@ -219,15 +205,14 @@ public class PlayerService {
                     }
                 }
 
-                // DTO로 반환
                 PlayerZoneDTO playerDataDTO = new PlayerZoneDTO(label, label, tablesData);
                 playerDataDTOList.add(playerDataDTO);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new IllegalArgumentException("선수 타격 정보를 찾을 수 없습니다.");
             }
         }
 
-        return playerDataDTOList;  // 크롤링한 데이터를 DTO 리스트로 반환
+        return playerDataDTOList;
     }
 }
 
