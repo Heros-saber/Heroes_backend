@@ -19,7 +19,7 @@ public class BatterCrawlingController {
     private final PlayerCrawlingService playerCrawlingService;
     private final BatterCrawlingService batterCrawlingService;
 
-    @GetMapping("/{name}")
+    @PostMapping("/{name}")
     public ResponseEntity<?> saveBatter(@PathVariable String name) {
         try{
             return ResponseEntity.ok(batterCrawlingService.saveBatter(name));
