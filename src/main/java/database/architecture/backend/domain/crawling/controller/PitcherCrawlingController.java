@@ -1,19 +1,23 @@
 package database.architecture.backend.domain.crawling.controller;
 
 import database.architecture.backend.domain.crawling.service.BatterCrawlingService;
+import database.architecture.backend.domain.crawling.service.PitcherCrawlingService;
 import database.architecture.backend.domain.crawling.service.PlayerCrawlingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/crawling/batter")
-public class BatterCrawlingController {
+@RequestMapping("/crawling/pitcher")
+public class PitcherCrawlingController {
     private final PlayerCrawlingService playerCrawlingService;
-    private final BatterCrawlingService batterCrawlingService;
+    private final PitcherCrawlingService pitcherCrawlingService;
 
     @GetMapping("/{name}/id")
     public ResponseEntity<?> getPlayerId(@PathVariable String name) {
@@ -34,18 +38,18 @@ public class BatterCrawlingController {
     }
 
     @GetMapping("/{playerId}/stats")
-    public ResponseEntity<?> getPitcherStats(@PathVariable int playerId) {
+    public ResponseEntity<?> getBatterStats(@PathVariable int playerId) throws IOException {
         try{
-            return ResponseEntity.ok(batterCrawlingService.getBatterStats(playerId));
+            return ResponseEntity.ok(pitcherCrawlingService.getPitcherStats(playerId));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/{playerId}/zone")
-    public ResponseEntity<?> crawlingPitcherZone(@PathVariable int playerId) {
+    public ResponseEntity<?> crawlingBatterZone(@PathVariable int playerId) {
         try{
-            return ResponseEntity.ok(batterCrawlingService.getBatterZoneStats(playerId));
+            return ResponseEntity.ok(pitcherCrawlingService.getPitcherZoneStats(playerId));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

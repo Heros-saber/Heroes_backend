@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 @Configuration
 public class WebDriverUtils {
-
     @Bean
     public WebDriver webDriver() {
         ChromeOptions options = new ChromeOptions();

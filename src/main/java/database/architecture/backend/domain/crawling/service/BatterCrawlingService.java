@@ -1,6 +1,5 @@
 package database.architecture.backend.domain.crawling.service;
 
-import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
 import lombok.RequiredArgsConstructor;
@@ -9,31 +8,23 @@ import org.jsoup.nodes.Document;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class BatterCrawlingService {
-    private final PlayerCrawlingService playerCrawlingService;
-    /**
-     * 선수의 연도별 성적을 크롤링해오는 함수
-     * 하지만 투타 (장재영) 섞인 선수는 불가
-     */
-    public List<BatterStatsDTO> getPlayerStats(int playerId) throws IOException {
+
+    public List<BatterStatsDTO> getBatterStats(int playerId) throws IOException {
         String url = "https://statiz.sporki.com/player/?m=year&p_no=" + playerId;
         Document doc = Jsoup.connect(url).get();
         Elements rows = doc.select("table tbody tr");
 
         List<BatterStatsDTO> statsList = new ArrayList<>();
+
         for (int i = 0; i < rows.size() - 1; i++) {
             Element row = rows.get(i);
             Elements cells = row.select("td");
@@ -99,25 +90,21 @@ public class BatterCrawlingService {
         return text.isEmpty() ? 0 : Integer.parseInt(text);
     }
 
-    /**
-     * 선수들의 히팅존 별 성적을 크롤링 해오는 함수
-     */
     public List<BatterZoneDTO> getBatterZoneStats(int playerId) {
         // 매핑
-        String[] mapping = {"4", "5", "6", "9"};
-        String[] mappingLabels = {"스윙율", "컨택율", "타율", "ops"};
+        List<Integer> mapping = List.of(4, 5, 6, 9);
+        List<String> mappingLabels = List.of("스윙율", "컨택율", "타율", "ops");
 
         List<BatterZoneDTO> playerDataDTOList = new ArrayList<>();
 
-        for (int i = 0; i < mapping.length; i++) {
-            String key = mapping[i];
-            String label = mappingLabels[i];
+        for (int i = 0; i < mapping.size(); i++) {
+            Integer key = mapping.get(i);
+            String label = mappingLabels.get(i);
             String url = "https://statiz.sporki.com/player/?m=analysis&p_no=" + playerId + "&pos=batting&year=2024&si1=3&si2=" + key;
-
             try {
-                Document doc = Jsoup.connect(url).get(); // Jsoup을 통해 HTML 가져오기
-                List<Double[]> tablesData = new ArrayList<>();
-                var tables = doc.select("div.box_item_3dan"); // 3단 테이블 찾기
+                Document doc = Jsoup.connect(url).get();
+                List<Double> tablesData = new ArrayList<>();
+                var tables = doc.select("div.box_item_3dan");
 
                 for (Element table : tables) {
                     var titles = table.select("div.h_tit");
@@ -125,41 +112,28 @@ public class BatterCrawlingService {
 
                     for (int j = 0; j < titles.size(); j++) {
                         String titleText = titles.get(j).text();
-                        List<Double> battingAverages = new ArrayList<>();
+                        List<Double> pitchingAverages = new ArrayList<>();
                         var items = itemContainers.get(j).select("div.info");
 
                         for (Element item : items) {
                             String avgText = item.select("strong").text();
                             try {
-                                battingAverages.add(Double.parseDouble(avgText));
+                                pitchingAverages.add(Double.parseDouble(avgText));
                             } catch (NumberFormatException e) {
-                                battingAverages.add(null);
+                                pitchingAverages.add(null);
                             }
                         }
-
-                        while (battingAverages.size() < 25) {
-                            battingAverages.add(null);
+                        while (pitchingAverages.size() < 25) {
+                            pitchingAverages.add(null);
                         }
+                        playerDataDTOList.add(new BatterZoneDTO(label, titleText, pitchingAverages));
 
-                        Double[] row = new Double[battingAverages.size() + 1];
-                        label = titleText;
-                        for (int k = 0; k < battingAverages.size(); k++) {
-                            row[k] = battingAverages.get(k);
-                        }
-
-                        tablesData.add(row);
                     }
                 }
-
-                BatterZoneDTO playerDataDTO = new BatterZoneDTO(label, label, tablesData);
-                playerDataDTOList.add(playerDataDTO);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("선수 타격 정보를 찾을 수 없습니다.");
+            } catch (Exception e) {
+                throw new IllegalArgumentException("해당 선수를 크롤링할 수 없습니다.");
             }
         }
-
         return playerDataDTOList;
     }
 }
-
-

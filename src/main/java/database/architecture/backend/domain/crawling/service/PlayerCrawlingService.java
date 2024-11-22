@@ -19,11 +19,6 @@ import java.util.regex.Pattern;
 public class PlayerCrawlingService {
     private final WebDriver webDriver;
 
-    /**
-     * 선수 이름으로 스탯티즈의 id를 찾는 함수.
-     * 동명이인일 경우는 아직 지원 안함
-     * @return 스탯티즈 Id;
-     */
     public int getPlayerId(String name) {
         String url = "https://statiz.sporki.com/player/?m=search&s=" + name;
         webDriver.get(url);
@@ -39,10 +34,6 @@ public class PlayerCrawlingService {
         throw new IllegalArgumentException("선수 정보를 찾을 수 없습니다.");
     }
 
-    /**
-     * 선수의 이름, id를 가지고 선수 정보를 크롤링해옴.
-     * @return 선수 정보
-     */
     public PlayerInfoDTO getPlayerInfo(int playerId){
         String url = "https://statiz.sporki.com/player/?m=playerinfo&p_no=" + playerId;
 

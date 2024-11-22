@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.crawling.dto.batter;
+package database.architecture.backend.domain.crawling.dto.pitcher;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BatterZoneDTO {
+public class PitcherZoneDTO {
     private String circumstance;
     private String label;
     private List<Double> data;
