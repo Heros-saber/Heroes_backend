@@ -32,12 +32,16 @@ public class MatchRecord {
     @JoinColumn(name = "teamId")
     private Team team;
 
-    public void update(int year, int month, int day, int heroesScore, int oppoScore){
+    public void updateMatchRecord(Integer year, Integer month, Integer day, Integer heroesScore, Integer oppoScore){
         this.year = year;
         this.month = month;
         this.day = day;
         this.heroesScore = heroesScore;
         this.oppoScore = oppoScore;
 
+        if(heroesScore == null && oppoScore == null)
+            win = false;
+        else
+            win = true;
     }
 }

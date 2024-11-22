@@ -22,4 +22,11 @@ public class HeroesRecord {
     private Integer draw;
     @Column(nullable = false)
     private Integer rank;
+
+    public void updateHeroesRecord(Integer win, Integer lose, Integer draw, Integer rank){
+        this.win = win;
+        this.lose = lose;
+        this.draw = draw;
+        this.rank = rank;
+    }
 }
