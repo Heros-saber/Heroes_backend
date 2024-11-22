@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class HeroseRecord {
+public class HeroesRecord {
     @Id
     @Column(nullable = false)
     private int year;
