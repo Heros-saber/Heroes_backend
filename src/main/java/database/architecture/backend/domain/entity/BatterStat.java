@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.repository;
+package database.architecture.backend.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

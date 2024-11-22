@@ -1,5 +1,8 @@
 package database.architecture.backend.domain.crawling.controller;
 
+import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
+import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
+import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
 import database.architecture.backend.domain.crawling.service.BatterCrawlingService;
 import database.architecture.backend.domain.crawling.service.PlayerCrawlingService;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +18,19 @@ import java.io.IOException;
 public class BatterCrawlingController {
     private final PlayerCrawlingService playerCrawlingService;
     private final BatterCrawlingService batterCrawlingService;
+
+    @GetMapping("/{name}")
+    public ResponseEntity<?> getBatter(@PathVariable String name) {
+        try{
+            int playerId = playerCrawlingService.getPlayerId(name);
+            PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
+            List<BatterStatsDTO> batterStats = batterCrawlingService.getBatterStats(playerId);
+            List<BatterZoneDTO> batterZoneStats = batterCrawlingService.getBatterZoneStats(playerId);
+            return ResponseEntity.ok(playerCrawlingService.getPlayerId(name));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     @GetMapping("/{name}/id")
     public ResponseEntity<?> getPlayerId(@PathVariable String name) {

@@ -1,5 +1,6 @@
 package database.architecture.backend.domain.crawling.service;
 
+import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BatterCrawlingService {
 
+    public PlayerInfoDTO saveBatter(PlayerInfoDTO playerInfo, List<BatterStatsDTO> batterStats, List<BatterZoneDTO> batterZoneStats){
+
+        return null;
+    }
     public List<BatterStatsDTO> getBatterStats(int playerId) throws IOException {
         String url = "https://statiz.sporki.com/player/?m=year&p_no=" + playerId;
         Document doc = Jsoup.connect(url).get();
