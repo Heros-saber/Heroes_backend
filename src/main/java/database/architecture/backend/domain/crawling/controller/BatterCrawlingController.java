@@ -1,21 +1,16 @@
 package database.architecture.backend.domain.crawling.controller;
 
-import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
-import database.architecture.backend.domain.crawling.dto.PlayerStatsDTO;
-import database.architecture.backend.domain.crawling.dto.PlayerZoneDTO;
 import database.architecture.backend.domain.crawling.service.BatterCrawlingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/crawling/batter")
-public class PlayerController {
+public class BatterCrawlingController {
     private final BatterCrawlingService batterCrawlingService;
 
     @GetMapping("/{name}/id")

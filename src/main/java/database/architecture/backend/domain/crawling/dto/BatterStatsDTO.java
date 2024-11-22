@@ -3,7 +3,7 @@ package database.architecture.backend.domain.crawling.dto;
 import lombok.Data;
 
 @Data
-public class PlayerStatsDTO {
+public class BatterStatsDTO {
     private String year;
     private float hAvg;
     private float obp;

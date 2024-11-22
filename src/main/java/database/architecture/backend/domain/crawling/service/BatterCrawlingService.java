@@ -1,8 +1,8 @@
 package database.architecture.backend.domain.crawling.service;
 
 import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
-import database.architecture.backend.domain.crawling.dto.PlayerZoneDTO;
-import database.architecture.backend.domain.crawling.dto.PlayerStatsDTO;
+import database.architecture.backend.domain.crawling.dto.BatterZoneDTO;
+import database.architecture.backend.domain.crawling.dto.BatterStatsDTO;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -82,18 +82,18 @@ public class BatterCrawlingService {
      * 선수의 연도별 성적을 크롤링해오는 함수
      * 하지만 투타 (장재영) 섞인 선수는 불가
      */
-    public List<PlayerStatsDTO> getPlayerStats(int playerId) throws IOException {
+    public List<BatterStatsDTO> getPlayerStats(int playerId) throws IOException {
         String url = "https://statiz.sporki.com/player/?m=year&p_no=" + playerId;
         Document doc = Jsoup.connect(url).get();
         Elements rows = doc.select("table tbody tr");
 
-        List<PlayerStatsDTO> statsList = new ArrayList<>();
+        List<BatterStatsDTO> statsList = new ArrayList<>();
         for (int i = 0; i < rows.size() - 1; i++) {
             Element row = rows.get(i);
             Elements cells = row.select("td");
 
             if (cells.size() > 0) {
-                PlayerStatsDTO stats = new PlayerStatsDTO();
+                BatterStatsDTO stats = new BatterStatsDTO();
                 String year = cells.get(0).text().trim();
 
                 if (!year.matches("\\d{4}")) { // 연도가 아닌 경우
@@ -156,12 +156,12 @@ public class BatterCrawlingService {
     /**
      * 선수들의 히팅존 별 성적을 크롤링 해오는 함수
      */
-    public List<PlayerZoneDTO> getBatterZoneStats(int playerId) {
+    public List<BatterZoneDTO> getBatterZoneStats(int playerId) {
         // 매핑
         String[] mapping = {"4", "5", "6", "9"};
         String[] mappingLabels = {"스윙율", "컨택율", "타율", "ops"};
 
-        List<PlayerZoneDTO> playerDataDTOList = new ArrayList<>();
+        List<BatterZoneDTO> playerDataDTOList = new ArrayList<>();
 
         for (int i = 0; i < mapping.length; i++) {
             String key = mapping[i];
@@ -205,7 +205,7 @@ public class BatterCrawlingService {
                     }
                 }
 
-                PlayerZoneDTO playerDataDTO = new PlayerZoneDTO(label, label, tablesData);
+                BatterZoneDTO playerDataDTO = new BatterZoneDTO(label, label, tablesData);
                 playerDataDTOList.add(playerDataDTO);
             } catch (IOException e) {
                 throw new IllegalArgumentException("선수 타격 정보를 찾을 수 없습니다.");

@@ -1,7 +1,6 @@
 package database.architecture.backend.domain.crawling.dto;
 
 import lombok.*;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerZoneDTO {
+public class BatterZoneDTO {
     private String circumstance;
     private String label;
     private List<Double[]> data;
