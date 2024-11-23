@@ -35,7 +35,7 @@ public class BatterCrawlingService {
     private final TeamRepository teamRepository;
     private final PlayerCrawlingService playerCrawlingService;
     private static final Map<String, Integer> positionMap = new HashMap<>();
-
+    private static final Map<String, Integer> batterIdList = new HashMap();
     static {
         positionMap.put("P", 1);
         positionMap.put("C", 2);
@@ -47,6 +47,19 @@ public class BatterCrawlingService {
         positionMap.put("CF", 8);
         positionMap.put("RF", 9);
         positionMap.put("DH", 10);
+
+        batterIdList.put("송성문", 11376);
+        batterIdList.put("김혜성", 12905);
+        batterIdList.put("최주환", 10182);
+        batterIdList.put("도슨", 15652);
+        batterIdList.put("김건희", 15472);
+        batterIdList.put("김태진", 11244);
+        batterIdList.put("박수종", 15132);
+        batterIdList.put("원성준", 16136);
+        batterIdList.put("이승원", 15476);
+        batterIdList.put("김웅빈", 12053);
+        batterIdList.put("변상권", 13223);
+        batterIdList.put("김병휘", 14577);
     }
 
     public Integer parsePosition(String pos) {
@@ -55,13 +68,11 @@ public class BatterCrawlingService {
 
     public BatterZoneStat calcAvg(List<BatterZoneStat> stats) {
         if (stats == null || stats.isEmpty()) {
-            return null; // 입력값이 없으면 null 반환
+            return null;
         }
 
-        // 첫 번째 통계 데이터를 기준으로 year, tag, circumstance, player는 그대로 사용
         BatterZoneStat firstStat = stats.get(0);
 
-        // 각 zone에 대한 평균 계산
         double[] zoneAverages = new double[25];
 
         for (int i = 0; i < 25; i++) {
@@ -155,7 +166,11 @@ public class BatterCrawlingService {
         if (checkplayer != null)
             throw new IllegalArgumentException("이미 등록된 선수 입니다.");
 
-        int playerId = playerCrawlingService.getPlayerId(name);
+        int playerId;
+        if(batterIdList.containsKey(name))
+            playerId = batterIdList.get(name);
+        else
+            playerId = playerCrawlingService.getPlayerId(name);
         PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
         List<BatterStatsDTO> batterStats = getBatterStats(playerId);
         List<BatterZoneDTO> batterZoneStats = getBatterZoneStats(playerId);

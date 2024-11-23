@@ -31,7 +31,7 @@ public class PitcherCrawlingService {
     private final TeamRepository teamRepository;
     private final PlayerCrawlingService playerCrawlingService;
     private static final Map<String, Integer> positionMap = new HashMap<>();
-
+    private static final Map<String, Integer> pitcherIdList = new HashMap<>();
     static {
         positionMap.put("P", 1);
         positionMap.put("C", 2);
@@ -43,6 +43,16 @@ public class PitcherCrawlingService {
         positionMap.put("CF", 8);
         positionMap.put("RF", 9);
         positionMap.put("DH", 10);
+
+        pitcherIdList.put("후라도", 15531);
+        pitcherIdList.put("헤이수스", 16138);
+        pitcherIdList.put("주승우", 15067);
+        pitcherIdList.put("하영민", 11222);
+        pitcherIdList.put("조상우", 11226);
+        pitcherIdList.put("김윤하", 16123);
+        pitcherIdList.put("김연주", 16127);
+        pitcherIdList.put("박범준", 16133);
+        pitcherIdList.put("조영건", 14132);
     }
 
     public Integer parsePosition(String pos) {
@@ -151,7 +161,12 @@ public class PitcherCrawlingService {
         if (checkplayer != null)
             throw new IllegalArgumentException("이미 등록된 선수입니다.");
 
-        int playerId = playerCrawlingService.getPlayerId(name);
+        int playerId;
+        if(pitcherIdList.containsKey(name))
+            playerId = pitcherIdList.get(name);
+        else
+            playerId = playerCrawlingService.getPlayerId(name);
+
         PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
         List<PitcherStatsDTO> pitcherStats = getPitcherStats(playerId);
         List<PitcherZoneDTO> pitcherZoneStats = getPitcherZoneStats(playerId);
