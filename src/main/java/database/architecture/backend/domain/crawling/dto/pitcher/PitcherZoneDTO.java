@@ -18,7 +18,7 @@ public class PitcherZoneDTO {
     private List<Double> data;
 
     public PitcherZoneStat toEntity(Player player){
-        return PitcherZoneStat.builder().circumstance(circumstance.split(" ")[2]).tag(label)
+        return PitcherZoneStat.builder().circumstance(circumstance.split(" - ")[1]).tag(label)
                 .zone1(data.get(0)).zone2(data.get(1)).zone3(data.get(2)).zone4(data.get(3)).zone5(data.get(4))
                 .zone6(data.get(5)).zone7(data.get(6)).zone8(data.get(7)).zone9(data.get(8)).zone10(data.get(9))
                 .zone11(data.get(10)).zone12(data.get(11)).zone13(data.get(12)).zone14(data.get(13)).zone15(data.get(14))

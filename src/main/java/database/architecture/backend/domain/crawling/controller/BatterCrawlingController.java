@@ -20,12 +20,13 @@ public class BatterCrawlingController {
     private final BatterCrawlingService batterCrawlingService;
 
     @PostMapping("/{name}")
-    public ResponseEntity<?> saveBatter(@PathVariable String name) {
-        try{
-            return ResponseEntity.ok(batterCrawlingService.saveBatter(name));
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> saveBatter(@PathVariable String name) throws IOException {
+//        try{
+            batterCrawlingService.saveBatter(name);
+            return ResponseEntity.ok("타자 등록에 성공했습니다.");
+//        }catch (Exception e){
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
     }
 
     @GetMapping("/{name}/id")

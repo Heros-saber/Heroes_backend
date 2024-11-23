@@ -51,4 +51,8 @@ public class BatterZoneStat {
     private Double zone23;
     private Double zone24;
     private Double zone25;
+
+    public void updateCircum(String circum){
+        this.circumstance = circum;
+    }
 }

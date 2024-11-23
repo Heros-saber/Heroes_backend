@@ -4,12 +4,14 @@ import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterZoneDTO;
 import database.architecture.backend.domain.crawling.dto.batter.BatterStatsDTO;
 import database.architecture.backend.domain.entity.BatterStat;
+import database.architecture.backend.domain.entity.BatterZoneStat;
 import database.architecture.backend.domain.entity.Player;
 import database.architecture.backend.domain.entity.Team;
 import database.architecture.backend.domain.repository.BatterStatRepository;
 import database.architecture.backend.domain.repository.BatterZoneStatRepository;
 import database.architecture.backend.domain.repository.PlayerRepository;
 import database.architecture.backend.domain.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,10 +52,107 @@ public class BatterCrawlingService {
     public Integer parsePosition(String pos) {
         return positionMap.getOrDefault(pos, null);
     }
-    public PlayerInfoDTO saveBatter(String name) throws IOException {
+
+    public BatterZoneStat calcAvg(List<BatterZoneStat> stats) {
+        if (stats == null || stats.isEmpty()) {
+            return null; // 입력값이 없으면 null 반환
+        }
+
+        // 첫 번째 통계 데이터를 기준으로 year, tag, circumstance, player는 그대로 사용
+        BatterZoneStat firstStat = stats.get(0);
+
+        // 각 zone에 대한 평균 계산
+        double[] zoneAverages = new double[25];
+
+        for (int i = 0; i < 25; i++) {
+            final int index = i + 1;
+            zoneAverages[i] = Double.parseDouble(String.format("%.3f", stats.stream()
+                    .mapToDouble(stat -> {
+                        try {
+                            return (Double) BatterZoneStat.class.getMethod("getZone" + index).invoke(stat);
+                        } catch (Exception e) {
+                            return 0.0;
+                        }
+                    })
+                    .average()
+                    .orElse(0.0)));
+        }
+
+        // 평균값으로 새로운 BatterZoneStat 객체 생성
+        return BatterZoneStat.builder()
+                .year(firstStat.getYear()) // year 유지
+                .tag(firstStat.getTag()) // tag 유지
+                .circumstance(firstStat.getCircumstance()) // circumstance 유지
+                .player(firstStat.getPlayer()) // player 유지
+                .zone1(zoneAverages[0])
+                .zone2(zoneAverages[1])
+                .zone3(zoneAverages[2])
+                .zone4(zoneAverages[3])
+                .zone5(zoneAverages[4])
+                .zone6(zoneAverages[5])
+                .zone7(zoneAverages[6])
+                .zone8(zoneAverages[7])
+                .zone9(zoneAverages[8])
+                .zone10(zoneAverages[9])
+                .zone11(zoneAverages[10])
+                .zone12(zoneAverages[11])
+                .zone13(zoneAverages[12])
+                .zone14(zoneAverages[13])
+                .zone15(zoneAverages[14])
+                .zone16(zoneAverages[15])
+                .zone17(zoneAverages[16])
+                .zone18(zoneAverages[17])
+                .zone19(zoneAverages[18])
+                .zone20(zoneAverages[19])
+                .zone21(zoneAverages[20])
+                .zone22(zoneAverages[21])
+                .zone23(zoneAverages[22])
+                .zone24(zoneAverages[23])
+                .zone25(zoneAverages[024])
+                .build();
+    }
+
+    @Transactional
+    public void postprocessing(Player player){
+        List<String> tags = List.of("스윙율", "컨택율", "타율", "ops");
+        List<String> circums = List.of("주자있음", "주자없음", "우언", "좌언", "구종모름", "너클볼", "득점권");
+        List<String> fastBall_column = List.of("투심", "포심", "커터", "싱커");
+        List<String> count_column = List.of("초구", "스트라이크 > 볼", "스트라이크 = 볼", "볼 > 스트라이크");
+        for (String tag : tags) {
+            for (String circum : circums) {
+                zoneStatRepository.deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
+            }
+        }
+
+        for (String tag : tags) {
+            List<BatterZoneStat> fast_list = new ArrayList<>();
+            for (String circum : fastBall_column) {
+                fast_list.add(zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag));
+                zoneStatRepository.deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
+            }
+            BatterZoneStat batterZoneStat = calcAvg(fast_list);
+            batterZoneStat.updateCircum("패스트볼");
+            zoneStatRepository.save(batterZoneStat);
+
+            List<BatterZoneStat> count_list = new ArrayList<>();
+            for (String circum : count_column) {
+                count_list.add(zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag));
+                zoneStatRepository.deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
+            }
+            BatterZoneStat countZoneStat = calcAvg(count_list);
+            countZoneStat.updateCircum("카운트");
+            zoneStatRepository.save(countZoneStat);
+
+            BatterZoneStat strikeZone = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "2S 이후", tag);
+            strikeZone.updateCircum("결정구");
+            zoneStatRepository.save(strikeZone);
+        }
+    }
+    @Transactional
+    public void saveBatter(String name) throws IOException {
         Player checkplayer = playerRepository.findPlayerByPlayerName(name);
         if (checkplayer != null)
-            throw new IllegalArgumentException("이미 등록된 선수입니다.");
+            throw new IllegalArgumentException("이미 등록된 선수 입니다.");
 
         int playerId = playerCrawlingService.getPlayerId(name);
         PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
@@ -72,8 +171,7 @@ public class BatterCrawlingService {
         for (BatterZoneDTO batterZoneStat : batterZoneStats) {
             zoneStatRepository.save(batterZoneStat.toEntity(player));
         }
-
-        return null;
+        postprocessing(player);
     }
     public List<BatterStatsDTO> getBatterStats(int playerId) throws IOException {
         String url = "https://statiz.sporki.com/player/?m=year&p_no=" + playerId;
