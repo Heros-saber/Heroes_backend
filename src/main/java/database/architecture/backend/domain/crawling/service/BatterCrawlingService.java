@@ -138,7 +138,9 @@ public class BatterCrawlingService {
         for (String tag : tags) {
             List<BatterZoneStat> fast_list = new ArrayList<>();
             for (String circum : fastBall_column) {
-                fast_list.add(zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag));
+                BatterZoneStat fastZone = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag);
+                if(fastZone != null)
+                    fast_list.add(fastZone);
                 zoneStatRepository.deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
             }
             BatterZoneStat batterZoneStat = calcAvg(fast_list);
@@ -147,7 +149,9 @@ public class BatterCrawlingService {
 
             List<BatterZoneStat> count_list = new ArrayList<>();
             for (String circum : count_column) {
-                count_list.add(zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag));
+                BatterZoneStat countZone = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag);
+                if(countZone != null)
+                    count_list.add(countZone);
                 zoneStatRepository.deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
             }
             BatterZoneStat countZoneStat = calcAvg(count_list);

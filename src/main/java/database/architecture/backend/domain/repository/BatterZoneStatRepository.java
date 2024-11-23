@@ -9,4 +9,6 @@ import java.util.List;
 public interface BatterZoneStatRepository extends JpaRepository<BatterZoneStat, Long> {
     BatterZoneStat findBatterZoneStatByPlayerAndCircumstanceAndTag(Player player,String circum, String tag);
     void deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(Player player, String circum, String tag);
+
+    List<BatterZoneStat> findAllByPlayerAndCircumstance(Player player, String circumstance);
 }

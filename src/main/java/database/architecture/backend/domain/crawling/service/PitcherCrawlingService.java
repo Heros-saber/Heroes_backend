@@ -61,13 +61,11 @@ public class PitcherCrawlingService {
 
     public PitcherZoneStat calcAvg(List<PitcherZoneStat> stats) {
         if (stats == null || stats.isEmpty()) {
-            return null; // 입력값이 없으면 null 반환
+            return null;
         }
 
-        // 첫 번째 통계 데이터를 기준으로 year, tag, circumstance, player는 그대로 사용
         PitcherZoneStat firstStat = stats.get(0);
 
-        // 각 zone에 대한 평균 계산
         double[] zoneAverages = new double[25];
 
         for (int i = 0; i < 25; i++) {
@@ -133,7 +131,9 @@ public class PitcherCrawlingService {
         for (String tag : tags) {
             List<PitcherZoneStat> fast_list = new ArrayList<>();
             for (String circum : fastBall_column) {
-                fast_list.add(zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag));
+                PitcherZoneStat fast_zone = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag);
+                if(fast_zone != null)
+                    fast_list.add(fast_zone);
                 zoneStatRepository.deletePitcherZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
             }
             PitcherZoneStat pitcherZoneStat = calcAvg(fast_list);
@@ -142,7 +142,9 @@ public class PitcherCrawlingService {
 
             List<PitcherZoneStat> count_list = new ArrayList<>();
             for (String circum : count_column) {
-                count_list.add(zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag));
+                PitcherZoneStat countZone = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, circum, tag);
+                if(countZone != null)
+                    count_list.add(countZone);
                 zoneStatRepository.deletePitcherZoneStatByPlayerAndAndCircumstanceAndTag(player, circum, tag);
             }
             PitcherZoneStat countZoneStat = calcAvg(count_list);
