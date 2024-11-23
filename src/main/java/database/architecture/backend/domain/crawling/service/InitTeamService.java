@@ -3,6 +3,7 @@ package database.architecture.backend.domain.crawling.service;
 import database.architecture.backend.domain.entity.Team;
 import database.architecture.backend.domain.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InitTeamService implements ApplicationListener<ContextRefreshedEvent> {
     private final TeamRepository teamRepository;
-
+    private final GameResultCrawlingService service;
+    @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         List<String> teamName = List.of("키움", "KIA", "삼성", "NC", "롯데", "KT", "두산", "SSG", "한화", "LG");
@@ -28,6 +30,11 @@ public class InitTeamService implements ApplicationListener<ContextRefreshedEven
             if(!teamRepository.existsTeamByTeamName(teamName.get(i)))
                 teamRepository.save(Team.builder().teamName(teamName.get(i)).
                                 teamFounded(teamFounded.get(i)).teamHometown(teamHometown.get(i)).build());
+        }
+
+        service.getTeamRank();
+        for(int i = 3; i<=10; i++){
+            service.gameCrawling(LocalDate.now().getYear(), i);
         }
     }
 }
