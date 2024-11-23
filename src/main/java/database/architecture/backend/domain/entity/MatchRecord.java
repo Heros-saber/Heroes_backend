@@ -1,5 +1,6 @@
 package database.architecture.backend.domain.entity;
 
+import database.architecture.backend.domain.crawling.dto.game.GameResultDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,16 +33,24 @@ public class MatchRecord {
     @JoinColumn(name = "teamId")
     private Team team;
 
-    public void updateMatchRecord(Integer year, Integer month, Integer day, Integer heroesScore, Integer oppoScore){
+    public void updateMatchRecord(GameResultDTO dto){
+        int year = dto.getDate().getYear();
+        int month = dto.getDate().getMonthValue();
+        int day = dto.getDate().getDayOfMonth();
+        int heroesScore = dto.getKiwoomScore();
+        int opponentScore = dto.getOpponentScore();
+
         this.year = year;
         this.month = month;
         this.day = day;
         this.heroesScore = heroesScore;
-        this.oppoScore = oppoScore;
+        this.oppoScore = opponentScore;
 
-        if(heroesScore == null && oppoScore == null)
-            win = false;
-        else
+        if(this.heroesScore == null && this.oppoScore == null)
+            win = null;
+        else if(this.heroesScore > opponentScore)
             win = true;
+        else
+            win = false;
     }
 }

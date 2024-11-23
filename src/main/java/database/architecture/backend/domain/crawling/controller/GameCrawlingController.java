@@ -13,7 +13,8 @@ public class GameCrawlingController {
     @GetMapping("/{year}/{month}")
     public ResponseEntity<?> gameCrawling(@PathVariable int year, @PathVariable int month) {
         try{
-            return ResponseEntity.ok(gameCrawlingService.gameCrawling(year, month));
+            gameCrawlingService.gameCrawling(year, month);
+            return ResponseEntity.ok("경기 결과, 일정 크롤링 성공");
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -22,7 +23,8 @@ public class GameCrawlingController {
     @GetMapping("/team_rank")
     public ResponseEntity<?> rankCrawling() {
         try{
-            return ResponseEntity.ok(gameCrawlingService.getTeamRank());
+            gameCrawlingService.getTeamRank();
+            return ResponseEntity.ok().body("팀 순위 크롤링 성공");
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
