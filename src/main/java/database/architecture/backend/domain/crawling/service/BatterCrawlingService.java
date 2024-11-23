@@ -148,6 +148,7 @@ public class BatterCrawlingService {
             zoneStatRepository.save(strikeZone);
         }
     }
+
     @Transactional
     public void saveBatter(String name) throws IOException {
         Player checkplayer = playerRepository.findPlayerByPlayerName(name);
