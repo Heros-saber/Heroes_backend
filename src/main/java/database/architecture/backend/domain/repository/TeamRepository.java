@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
     Team findTeamByTeamName(String teamName);
+    boolean existsTeamByTeamName(String teamName);
 }
