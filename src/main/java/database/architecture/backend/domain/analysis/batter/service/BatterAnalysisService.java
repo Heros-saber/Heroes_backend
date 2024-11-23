@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.analy.batter.service;
+package database.architecture.backend.domain.analysis.batter.service;
 
 import database.architecture.backend.domain.entity.BatterZoneStat;
 import database.architecture.backend.domain.entity.Player;
