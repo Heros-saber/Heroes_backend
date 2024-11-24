@@ -11,4 +11,5 @@ public interface BatterZoneStatRepository extends JpaRepository<BatterZoneStat, 
     void deleteBatterZoneStatByPlayerAndAndCircumstanceAndTag(Player player, String circum, String tag);
 
     List<BatterZoneStat> findAllByPlayerAndCircumstance(Player player, String circumstance);
+    List<BatterZoneStat> findAllByPlayer(Player player);
 }
