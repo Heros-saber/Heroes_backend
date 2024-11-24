@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class PlayerDTO {
 
@@ -28,6 +29,24 @@ public class PlayerDTO {
         private PlayerInfoDTO playerInfo;
         private List<PitcherStatDTO> stats;
         private List<ZoneStatDTO> zone;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class BatterDetailResponseDTO {
+        private PlayerInfoDTO playerInfo;
+        private Map<String, List<ZoneStatDTO>> groupedZones;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PitcherDetailResponseDTO {
+        private PlayerInfoDTO playerInfo;
+        private Map<String, List<ZoneStatDTO>> groupedZones;
     }
 
 
