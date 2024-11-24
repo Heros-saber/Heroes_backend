@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MatchRecordRepository extends JpaRepository<MatchRecord, Long> {
     List<MatchRecord> findAllByYearAndMonth(Integer year, Integer month);
+    List<MatchRecord> findAllByYearAndMonthAndDayAfterOrderByDay(int year, Integer month, int day);
 }
