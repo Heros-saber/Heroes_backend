@@ -17,7 +17,7 @@ public class PitcherCrawlingController {
     private final PitcherCrawlingService pitcherCrawlingService;
 
     @PostMapping("/{name}")
-    public ResponseEntity<?> saveBatter(@PathVariable String name) {
+    public ResponseEntity<?> savePitcher(@PathVariable String name) {
         try{
             pitcherCrawlingService.savePitcher(name);
             return ResponseEntity.ok().body("투수 정보를 저장 성공 했습니다.");

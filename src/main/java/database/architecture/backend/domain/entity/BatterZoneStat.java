@@ -55,4 +55,86 @@ public class BatterZoneStat {
     public void updateCircum(String circum){
         this.circumstance = circum;
     }
+
+    public Double zoneAvg() {
+        Double sum = 0.0;
+
+        Double[] zones = {zone1, zone2, zone3, zone4, zone5, zone6, zone7, zone8, zone9, zone10,
+                zone11, zone12, zone13, zone14, zone15, zone16, zone17, zone18, zone19, zone20,
+                zone21, zone22, zone23, zone24, zone25};
+
+        for (Double zone : zones) {
+            if (zone != null) {
+                sum += zone;
+            } else {
+                sum += 0.0;
+            }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum / 25));
+    }
+
+    public Double leftUpside(){
+        Double sum = 0.0;
+
+        Double[] zones = {zone1, zone2, zone3, zone6, zone7, zone8, zone11, zone12, zone13 };
+
+        for (Double zone : zones) {
+            if (zone != null) {
+                sum += zone;
+            } else {
+                sum += 0.0;
+            }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum / 9));
+    }
+
+    public Double rightUpside(){
+        Double sum = 0.0;
+
+        Double[] zones = {zone3, zone4, zone5, zone8, zone9, zone10, zone13, zone14, zone15 };
+
+        for (Double zone : zones) {
+            if (zone != null) {
+                sum += zone;
+            } else {
+                sum += 0.0;
+            }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum / 9));
+    }
+
+    public Double leftDownside(){
+        Double sum = 0.0;
+
+        Double[] zones = {zone11, zone12, zone13, zone16, zone17, zone18, zone21, zone22, zone23 };
+
+        for (Double zone : zones) {
+            if (zone != null) {
+                sum += zone;
+            } else {
+                sum += 0.0;
+            }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum / 9));
+    }
+
+    public Double rightDownside(){
+        Double sum = 0.0;
+
+        Double[] zones = {zone13, zone14, zone15, zone18, zone19, zone20, zone23, zone24, zone25 };
+
+        for (Double zone : zones) {
+            if (zone != null) {
+                sum += zone;
+            } else {
+                sum += 0.0;
+            }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum / 9));
+    }
 }

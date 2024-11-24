@@ -10,6 +10,7 @@ import database.architecture.backend.domain.entity.Team;
 import database.architecture.backend.domain.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PitcherCrawlingService {
     private final PitcherStatRepository pitcherStatRepository;
     private final PitcherZoneStatRepository zoneStatRepository;
@@ -48,7 +50,7 @@ public class PitcherCrawlingService {
         pitcherIdList.put("헤이수스", 16138);
         pitcherIdList.put("주승우", 15067);
         pitcherIdList.put("하영민", 11222);
-        pitcherIdList.put("조상우", 11226);
+        pitcherIdList.put("조상우", 11126);
         pitcherIdList.put("김윤하", 16123);
         pitcherIdList.put("김연주", 16127);
         pitcherIdList.put("박범준", 16133);

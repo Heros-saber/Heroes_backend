@@ -9,4 +9,5 @@ import java.util.List;
 public interface BatterStatRepository extends JpaRepository<BatterStat, Long> {
 
     List<BatterStat> findAllByPlayer(Player player);
+    BatterStat findBatterStatByPlayerAndYear(Player player, String year);
 }
