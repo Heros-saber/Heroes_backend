@@ -3,8 +3,10 @@ package database.architecture.backend.domain.api.service;
 import database.architecture.backend.domain.api.dto.PlayerDTO;
 import database.architecture.backend.domain.crawling.dto.PlayerInfoDTO;
 import database.architecture.backend.domain.entity.BatterStat;
+import database.architecture.backend.domain.entity.PitcherStat;
 import database.architecture.backend.domain.entity.Player;
 import database.architecture.backend.domain.repository.BatterStatRepository;
+import database.architecture.backend.domain.repository.PitcherStatRepository;
 import database.architecture.backend.domain.repository.PlayerInfoRepository;
 import database.architecture.backend.domain.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,9 @@ public class PlayerInfoService {
 
     private final PlayerInfoRepository playerInfoRepository;
     private final BatterStatRepository batterStatRepository;
+    private final PitcherStatRepository pitcherStatRepository;
 
-    public PlayerDTO.BatterResponseDTO getPlayerInfo(String playerName) {
+    public PlayerDTO.BatterResponseDTO getBatterInfo(String playerName) {
         Player player = playerInfoRepository.findPlayerByPlayerName(playerName);
         if (player == null)
             throw new IllegalArgumentException("선수를 찾을 수 없습니다: " + playerName);
@@ -54,6 +57,48 @@ public class PlayerInfoService {
 
         return PlayerDTO.BatterResponseDTO.builder()
                 .playerInfo(playerInfo)
+                .stats(stats)
+                .build();
+    }
+
+    public PlayerDTO.PitcherResponseDTO getPitcherInfo(String playerName) {
+        Player player = playerInfoRepository.findPlayerByPlayerName(playerName);
+        if (player == null)
+            throw new IllegalArgumentException("선수를 찾을 수 없습니다: " + playerName);
+
+        PlayerDTO.PlayerInfoDTO playerInfoDTO = PlayerDTO.PlayerInfoDTO.builder()
+                .playerName(player.getPlayerName())
+                .playerBorn(player.getPlayerBorn())
+                .playerDraft(player.getPlayerDraft())
+                .playerPos(parsePosition(player.getPlayerPos()))
+                .build();
+
+        List<PitcherStat> pitcherStats = pitcherStatRepository.findAllByPlayer(player);
+        List<PlayerDTO.PitcherStatDTO> stats = pitcherStats.stream()
+                .map(stat -> PlayerDTO.PitcherStatDTO.builder()
+                        .year(stat.getYear())
+                        .games(stat.getGames())
+                        .win(stat.getWin())
+                        .lose(stat.getLose())
+                        .save(stat.getSave())
+                        .hold(stat.getHold())
+                        .ip(stat.getIp())
+                        .era(stat.getEra())
+                        .er(stat.getEr())
+                        .tbf(stat.getTbf())
+                        .h(stat.getHit())
+                        .twoB(stat.getH_double())
+                        .threeB(stat.getTriple())
+                        .hr(stat.getHr())
+                        .bb(stat.getBb())
+                        .so(stat.getSo())
+                        .whip(stat.getWhip())
+                        .war(stat.getWar())
+                        .build())
+                .toList();
+
+        return PlayerDTO.PitcherResponseDTO.builder()
+                .playerInfo(playerInfoDTO)
                 .stats(stats)
                 .build();
     }

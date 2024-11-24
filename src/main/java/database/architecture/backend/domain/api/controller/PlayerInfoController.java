@@ -17,8 +17,14 @@ public class PlayerInfoController {
     private final PlayerInfoService playerInfoService;
 
     @GetMapping("/batter/{name}")
-    public ResponseEntity<?> getPlayerData(@PathVariable("name") String name) {
-        PlayerDTO.BatterResponseDTO playerData = playerInfoService.getPlayerInfo(name);
+    public ResponseEntity<?> getBatterData(@PathVariable("name") String name) {
+        PlayerDTO.BatterResponseDTO playerData = playerInfoService.getBatterInfo(name);
+        return ResponseEntity.ok(playerData);
+    }
+
+    @GetMapping("/pitcher/{name}")
+    public ResponseEntity<?> getPitcherData(@PathVariable("name") String name) {
+        PlayerDTO.PitcherResponseDTO playerData = playerInfoService.getPitcherInfo(name);
         return ResponseEntity.ok(playerData);
     }
 }

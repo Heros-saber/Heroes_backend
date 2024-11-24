@@ -10,29 +10,29 @@ import java.util.List;
 
 public class PlayerDTO {
 
-    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
     public static class BatterResponseDTO {
         private PlayerInfoDTO playerInfo;
         private List<BatterStatDTO> stats;
     }
 
-    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
     public static class PitcherResponseDTO {
         private PlayerInfoDTO playerInfo;
         private List<PitcherStatDTO> stats;
     }
 
 
-    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
     public static class PlayerInfoDTO {
 
         private String playerName;
@@ -41,10 +41,10 @@ public class PlayerDTO {
         private String playerPos;
     }
 
-    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
     public static class BatterStatDTO {
         private String year;
         private Double avg;
@@ -61,10 +61,10 @@ public class PlayerDTO {
         private int rbi;
     }
 
-    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
     public static class PitcherStatDTO {
         private String year;
         private int games;
@@ -74,6 +74,7 @@ public class PlayerDTO {
         private int hold;
         private double ip;
         private double era;
+        private int er;
         private int tbf;
         private int h;
         private int twoB;
