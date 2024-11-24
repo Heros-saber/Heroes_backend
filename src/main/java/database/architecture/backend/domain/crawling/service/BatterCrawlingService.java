@@ -52,6 +52,7 @@ public class BatterCrawlingService {
         batterIdList.put("김혜성", 12905);
         batterIdList.put("최주환", 10182);
         batterIdList.put("도슨", 15652);
+        batterIdList.put("이주형", 14591);
         batterIdList.put("김건희", 15472);
         batterIdList.put("김태진", 11244);
         batterIdList.put("박수종", 15132);

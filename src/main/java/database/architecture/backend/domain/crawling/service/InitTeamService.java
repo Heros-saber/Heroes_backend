@@ -4,6 +4,7 @@ import database.architecture.backend.domain.entity.Team;
 import database.architecture.backend.domain.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InitTeamService implements ApplicationListener<ContextRefreshedEvent> {
     private final TeamRepository teamRepository;
     private final GameResultCrawlingService service;
+    private final BatterCrawlingService batterCrawlingService;
+    private final PitcherCrawlingService pitcherCrawlingService;
+
     @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -35,6 +40,22 @@ public class InitTeamService implements ApplicationListener<ContextRefreshedEven
         service.getTeamRank();
         for(int i = 3; i<=10; i++){
             service.gameCrawling(LocalDate.now().getYear(), i);
+        }
+
+        try {
+            batterCrawlingService.saveBatter("송성문");
+            batterCrawlingService.saveBatter("김혜성");
+            batterCrawlingService.saveBatter("도슨");
+            batterCrawlingService.saveBatter("변상권");
+            batterCrawlingService.saveBatter("이주형");
+
+            pitcherCrawlingService.savePitcher("후라도");
+            pitcherCrawlingService.savePitcher("헤이수스");
+            pitcherCrawlingService.savePitcher("하영민");
+            pitcherCrawlingService.savePitcher("주승우");
+            pitcherCrawlingService.savePitcher("조상우");
+        }catch (Exception e){
+            log.info(e.getMessage());
         }
     }
 }
