@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class MainPageService {
     private final HeroesRecordRepository heroesRecordRepository;
     private final MatchRecordRepository matchRecordRepository;
 
-    public MainPageDTO getMainPageData() {
+    public MainPageDTO.MainPageListDTO getMainPageData() {
         int currentYear = LocalDate.now().getYear();
         int currentMonth = LocalDate.now().getMonthValue();
 
@@ -37,11 +38,23 @@ public class MainPageService {
                 upcomingGames.get(0).getDay()
         );
 
-        return MainPageDTO.builder()
+        return MainPageDTO.MainPageListDTO.builder()
                 .rank(rank)
                 .win(win)
                 .lose(lose)
                 .nextGame(nextGameDate == null ? null : nextGameDate.toString())
                 .build();
+    }
+
+    public List<MainPageDTO.MatchRecordDTO> getMonthlyMatches(int year, int month) {
+        List<MatchRecord> matches = matchRecordRepository.findByYearAndMonthOrderByDayAsc(year, month);
+        return matches.stream()
+                .map(matchRecord -> MainPageDTO.MatchRecordDTO.builder()
+                        .date(LocalDate.of(matchRecord.getYear(), matchRecord.getMonth(), matchRecord.getDay()))
+                        .kiwoomScore(matchRecord.getHeroesScore())
+                        .opponentScore(matchRecord.getOppoScore())
+                        .win(matchRecord.getWin())
+                        .build()
+                ).collect(Collectors.toList());
     }
 }
