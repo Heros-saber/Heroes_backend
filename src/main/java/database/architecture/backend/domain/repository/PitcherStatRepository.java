@@ -9,4 +9,6 @@ import java.util.List;
 public interface PitcherStatRepository extends JpaRepository<PitcherStat, Long> {
 
     List<PitcherStat> findAllByPlayer(Player player);
+
+    PitcherStat findPitcherStatByPlayerAndYear(Player player, String year);
 }
