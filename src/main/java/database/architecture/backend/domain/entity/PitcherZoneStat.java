@@ -87,7 +87,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", sum / 9));
+        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
     }
 
     public Double rightUpside() {
@@ -103,7 +103,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", sum / 9));
+        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
     }
 
     public Double leftDownside() {
@@ -119,7 +119,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", sum / 9));
+        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
     }
 
     public Double rightDownside() {
@@ -135,7 +135,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", sum / 9));
+        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
     }
 
     public Double ballZone() {
@@ -152,7 +152,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", sum / 6));
+        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
     }
 
     public Double strikeZone(){
@@ -167,6 +167,25 @@ public class PitcherZoneStat {
                 sum += 0.0;
             }
         }
-        return Double.parseDouble(String.format("%.3f", sum / 6));
+        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
+    }
+
+    private Double sum()
+    {
+        Double sum = 0.0;
+
+        Double[] zones = {zone1, zone2, zone3, zone4, zone5, zone6, zone7, zone8, zone9, zone10,
+                zone11, zone12, zone13, zone14, zone15, zone16, zone17, zone18, zone19, zone20,
+                zone21, zone22, zone23, zone24, zone25};
+
+        for (Double zone : zones) {
+            if (zone != null) {
+                sum += zone;
+            } else {
+                sum += 0.0;
+            }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum));
     }
 }
