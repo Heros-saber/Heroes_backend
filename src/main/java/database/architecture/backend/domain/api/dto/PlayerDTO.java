@@ -55,11 +55,11 @@ public class PlayerDTO {
     @NoArgsConstructor
     @Data
     public static class PlayerInfoDTO {
-
         private String playerName;
         private LocalDate playerBorn;
         private String playerDraft;
         private String playerPos;
+        private String team;
     }
 
     @Builder

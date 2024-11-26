@@ -37,6 +37,7 @@ public class PlayerInfoService {
                 .playerBorn(player.getPlayerBorn())
                 .playerDraft(player.getPlayerDraft())
                 .playerPos(parsePosition(player.getPlayerPos()))
+                .team(player.getTeam().getTeamName())
                 .build();
     }
 
