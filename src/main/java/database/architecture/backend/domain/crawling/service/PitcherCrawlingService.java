@@ -114,7 +114,7 @@ public class PitcherCrawlingService {
                 .zone22(zoneAverages[21])
                 .zone23(zoneAverages[22])
                 .zone24(zoneAverages[23])
-                .zone25(zoneAverages[024])
+                .zone25(zoneAverages[24])
                 .build();
     }
 

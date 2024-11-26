@@ -148,7 +148,6 @@ public class PitcherAnalysisService {
         return summary;
     }
 
-    // 스트 존이 겹쳐서 비율이 100보다 높아지고 비율이 이상해짐 이거 한번 생각해봐야할듯
     private String zonePitchType(Player player, int tag){
         PitcherZoneStat fastball_zone = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "패스트볼", "구사율");
         PitcherZoneStat changeup_zone = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "체인지업", "구사율");
@@ -181,23 +180,18 @@ public class PitcherAnalysisService {
             if(slider_zone != null) slider = slider_zone.rightDownside();
         }
 
-        log.info("패스트볼 = {}", fastball);
-        log.info("체인지업 = {}", changeup);
-        log.info("커브 = {}", curve);
-        log.info("슬라이더 = {}", slider);
-
         Double max = Math.max(
                 Math.max(fastball, changeup),
                 Math.max(curve, slider)
         );
 
         if(max.equals(fastball))
-            return "패스트볼 비율이 가장 높습니다." + max + "%\n";
+            return "패스트볼 비율이 가장 높습니다.\n";
         else if(max.equals(changeup))
-            return "체인지업 비율이 가장 높습니다." + max + "%\n";
+            return "체인지업 비율이 가장 높습니다.\n";
         else if(max.equals(curve))
-            return  "커브 비율이 가장 높습니다." + max + "%\n";
+            return  "커브 비율이 가장 높습니다.\n";
         else
-            return "슬라이더 비율이 가장 높습니다." + max + "%\n";
+            return "슬라이더 비율이 가장 높습니다.\n";
     }
 }
