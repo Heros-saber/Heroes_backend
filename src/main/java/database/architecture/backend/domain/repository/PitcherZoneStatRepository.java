@@ -10,6 +10,6 @@ import java.util.List;
 public interface PitcherZoneStatRepository extends JpaRepository<PitcherZoneStat, Long> {
     PitcherZoneStat findPitcherZoneStatByPlayerAndCircumstanceAndTag(Player player, String circum, String tag);
     void deletePitcherZoneStatByPlayerAndAndCircumstanceAndTag(Player player, String circum, String tag);
-
+    List<PitcherZoneStat> findAllByPlayerAndCircumstance(Player player, String circum);
     List<PitcherZoneStat> findAllByPlayer(Player player);
 }

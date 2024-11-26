@@ -1,5 +1,8 @@
 package database.architecture.backend.domain.analysis.pitcher.service;
 
+import database.architecture.backend.domain.analysis.batter.dto.BatterAnalysisDTO;
+import database.architecture.backend.domain.analysis.pitcher.dto.PitcherAnalysisDTO;
+import database.architecture.backend.domain.entity.BatterZoneStat;
 import database.architecture.backend.domain.entity.PitcherStat;
 import database.architecture.backend.domain.entity.PitcherZoneStat;
 import database.architecture.backend.domain.entity.Player;
@@ -10,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -18,8 +24,13 @@ public class PitcherAnalysisService {
     private final PitcherStatRepository statRepository;
     private final PitcherZoneStatRepository zoneStatRepository;
 
-    public String analyzePitcher(String name){
+    public PitcherAnalysisDTO.PitcherAnalyzeResponse analyzePitcher(String name){
         Player player = playerRepository.findPlayerByPlayerName(name);
+        String oneLineAnalyze = one_line_analyze(player);
+        List<PitcherAnalysisDTO.PitcherZoneDTO> pitcherZoneDTOS = crisisZone(player);
+        return PitcherAnalysisDTO.PitcherAnalyzeResponse.builder().one_line_analysis(oneLineAnalyze).zoneStatDTO(pitcherZoneDTOS).build();
+    }
+    public String one_line_analyze(Player player){
         PitcherStat overall = statRepository.findPitcherStatByPlayerAndYear(player, "2024");
         PitcherZoneStat vsLeft = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "좌타", "타율");
         PitcherZoneStat vsRight = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "우타", "타율");
@@ -99,22 +110,14 @@ public class PitcherAnalysisService {
         PitcherZoneStat crisis = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "결정구", "구사율");
 
         Double countLeftUpside = count.leftUpside();
-        log.info("카운트 왼쪽 위 = {}", countLeftUpside);
         Double countRightUpside = count.rightUpside();
-        log.info("카운트 오른쪽 위 = {}", countRightUpside);
         Double countLeftDownside = count.leftDownside();
-        log.info("카운트 왼쪽 아래 = {}", countLeftDownside);
         Double countRightDownside = count.rightDownside();
-        log.info("카운트 오른쪽 아래= {}", countRightDownside);
 
         Double leftUpside2S = crisis.leftUpside();
-        log.info("결정구 왼쪽 위 = {}", leftUpside2S);
         Double rightUpside2S = crisis.rightUpside();
-        log.info("결정구 오른쪽 위 = {}", rightUpside2S);
         Double leftDownside2S = crisis.leftDownside();
-        log.info("결정구 왼쪽 아래 = {}", leftDownside2S);
         Double rightDownside2S = crisis.rightDownside();
-        log.info("결정구 오른쪽 아래 = {}", rightDownside2S);
 
         Double maxCount = Math.max(
                 Math.max(countLeftUpside, countRightUpside),
@@ -193,5 +196,46 @@ public class PitcherAnalysisService {
             return  "커브 비율이 가장 높습니다.\n";
         else
             return "슬라이더 비율이 가장 높습니다.\n";
+    }
+
+    public List<PitcherAnalysisDTO.PitcherZoneDTO> crisisZone(Player player){
+        List<PitcherZoneStat> fastballZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "패스트볼");
+        List<PitcherZoneStat> sliderZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "슬라이더");
+        List<PitcherZoneStat> changeupZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "체인지업");
+        List<PitcherZoneStat> curveZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "커브");
+        PitcherZoneStat countAvg = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "카운트", "타율");
+        PitcherZoneStat Avg_2S = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "결정구", "타율");
+        PitcherZoneStat vs_right = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "우타", "타율");
+        PitcherZoneStat vs_left = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "좌타", "타율");
+
+        PitcherAnalysisDTO.PitcherZoneDTO count_avg_zone = new PitcherAnalysisDTO.PitcherZoneDTO(countAvg);
+        count_avg_zone.setTitle("유리한 카운트에서 타율");
+        PitcherAnalysisDTO.PitcherZoneDTO avg_2S_zone = new PitcherAnalysisDTO.PitcherZoneDTO(Avg_2S);
+        avg_2S_zone.setTitle("불리한 카운트에서 타율");
+
+
+        List<PitcherAnalysisDTO.PitcherZoneDTO> crisisZoneList = new ArrayList<>();
+        crisisZoneList.add(count_avg_zone);
+        crisisZoneList.add(avg_2S_zone);
+        crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(vs_left));
+        crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(vs_right));
+        if (!fastballZone.isEmpty()) {
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(fastballZone.get(0)));
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(fastballZone.get(1)));
+        }
+        if (!sliderZone.isEmpty()) {
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(sliderZone.get(0)));
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(sliderZone.get(1)));
+        }
+        if (!changeupZone.isEmpty()) {
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(changeupZone.get(0)));
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(changeupZone.get(1)));
+        }
+        if (!curveZone.isEmpty()) {
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(curveZone.get(0)));
+            crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(curveZone.get(1)));
+        }
+
+        return crisisZoneList;
     }
 }
