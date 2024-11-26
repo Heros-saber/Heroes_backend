@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BatterAnalysisController {
     private final BatterAnalysisService service;
     @GetMapping("/{name}")
-    public ResponseEntity<?> test(@PathVariable String name){
+    public ResponseEntity<?> analyzeBatter(@PathVariable String name){
 
         return ResponseEntity.ok(service.analyzeBatter(name));
 
