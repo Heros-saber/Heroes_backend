@@ -30,7 +30,7 @@ public class PitcherAnalysisService {
         List<PitcherAnalysisDTO.PitcherZoneDTO> pitcherZoneDTOS = crisisZone(player);
         return PitcherAnalysisDTO.PitcherAnalyzeResponse.builder().one_line_analysis(oneLineAnalyze).zoneStatDTO(pitcherZoneDTOS).build();
     }
-    public String one_line_analyze(Player player){
+    private String one_line_analyze(Player player){
         PitcherStat overall = statRepository.findPitcherStatByPlayerAndYear(player, "2024");
         PitcherZoneStat vsLeft = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "좌타", "타율");
         PitcherZoneStat vsRight = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "우타", "타율");
@@ -198,7 +198,7 @@ public class PitcherAnalysisService {
             return "슬라이더 비율이 가장 높습니다.\n";
     }
 
-    public List<PitcherAnalysisDTO.PitcherZoneDTO> crisisZone(Player player){
+    private List<PitcherAnalysisDTO.PitcherZoneDTO> crisisZone(Player player){
         List<PitcherZoneStat> fastballZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "패스트볼");
         List<PitcherZoneStat> sliderZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "슬라이더");
         List<PitcherZoneStat> changeupZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "체인지업");

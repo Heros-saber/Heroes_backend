@@ -31,7 +31,7 @@ public class BatterAnalysisService {
 
         return BatterAnalysisDTO.BatterAnalyzeResponse.builder().one_line_analysis(oneLineAnalysis).zoneStatDTO(zoneStat).build();
     }
-    public String one_line_analysis(Player player){
+    private String one_line_analysis(Player player){
         BatterStat batterStat = statRepository.findBatterStatByPlayerAndYear(player, "2024");
         BatterZoneStat count = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "카운트", "ops");
         BatterZoneStat finishing = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "결정구", "ops");
@@ -319,7 +319,7 @@ public class BatterAnalysisService {
         }
     }
 
-    public List<BatterAnalysisDTO.BatterZoneDTO> crisisZone(Player player, String crisis){
+    private List<BatterAnalysisDTO.BatterZoneDTO> crisisZone(Player player, String crisis){
         List<BatterZoneStat> fastballZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "패스트볼");
         List<BatterZoneStat> sliderZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "슬라이더");
         List<BatterZoneStat> changeupZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "체인지업");
