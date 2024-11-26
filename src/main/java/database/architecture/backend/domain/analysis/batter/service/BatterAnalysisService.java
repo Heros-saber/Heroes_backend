@@ -364,6 +364,23 @@ public class BatterAnalysisService {
         crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(vs_left));
         crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(vs_right));
 
+        if (!"패스트볼".equals(crisis)) {
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(fastballZone.get(0), fastballZone.get(1)));
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(fastballZone.get(2)));
+        }
+        if (!"슬라이더".equals(crisis)) {
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(sliderZone.get(0), sliderZone.get(1)));
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(sliderZone.get(2)));
+        }
+        if (!"체인지업".equals(crisis)) {
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(changeupZone.get(0), changeupZone.get(1)));
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(changeupZone.get(2)));
+        }
+        if (!"커브".equals(crisis)) {
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(curveZone.get(0), curveZone.get(1)));
+            crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(curveZone.get(2)));
+        }
+
         return crisisZoneList;
     }
 }
