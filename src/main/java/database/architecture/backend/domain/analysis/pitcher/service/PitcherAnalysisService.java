@@ -130,20 +130,20 @@ public class PitcherAnalysisService {
         if(maxCount.equals(countLeftUpside))
             summary = "카운트를 잡을 때 왼쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 1);
         else if(maxCount.equals(countRightUpside))
-            summary = "카운트를 잡을 때 오른쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 던집니다." + zonePitchType(player, 2);
+            summary = "카운트를 잡을 때 오른쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 2);
         else if(maxCount.equals(countLeftDownside))
-            summary = "카운트를 잡을 때 왼쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에던집니다." + zonePitchType(player, 3);
+            summary = "카운트를 잡을 때 왼쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 3);
         else
-            summary = "카운트를 잡을 때 오른쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에던집니다." + zonePitchType(player, 4);
+            summary = "카운트를 잡을 때 오른쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 4);
 
         if(max2S.equals(countLeftUpside))
-            summary += "2S 이후 왼쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에던집니다."+ zonePitchType(player, 1);
+            summary += "2S 이후 왼쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 "+ zonePitchType(player, 1);
         else if(max2S.equals(countRightUpside))
-            summary += "2S 이후 오른쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에던집니다." + zonePitchType(player, 2);
+            summary += "2S 이후 오른쪽 상단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 2);
         else if(max2S.equals(countLeftDownside))
-            summary += "2S 이후 왼쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에던집니다." + zonePitchType(player, 3);
+            summary += "2S 이후 왼쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 3);
         else
-            summary += "2S 이후 오른쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에던집니다." + zonePitchType(player, 4);
+            summary += "2S 이후 오른쪽 하단에 많이 던집니다. 약 " + maxCount + "%의 공을 해당 존에 투구하고 " + zonePitchType(player, 4);
         
         return summary;
     }

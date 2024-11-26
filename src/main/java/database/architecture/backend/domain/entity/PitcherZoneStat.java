@@ -3,6 +3,8 @@ package database.architecture.backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -87,7 +89,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
+        return Double.parseDouble(String.format("%.3f", (sum / this.duplicate_considered_sum()) * 100));
     }
 
     public Double rightUpside() {
@@ -103,7 +105,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
+        return Double.parseDouble(String.format("%.3f", (sum / this.duplicate_considered_sum()) * 100));
     }
 
     public Double leftDownside() {
@@ -119,7 +121,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
+        return Double.parseDouble(String.format("%.3f", (sum / this.duplicate_considered_sum()) * 100));
     }
 
     public Double rightDownside() {
@@ -135,7 +137,7 @@ public class PitcherZoneStat {
             }
         }
 
-        return Double.parseDouble(String.format("%.3f", (sum / this.sum()) * 100));
+        return Double.parseDouble(String.format("%.3f", (sum / this.duplicate_considered_sum()) * 100));
     }
 
     public Double ballZone() {
@@ -184,6 +186,30 @@ public class PitcherZoneStat {
             } else {
                 sum += 0.0;
             }
+        }
+
+        return Double.parseDouble(String.format("%.3f", sum));
+    }
+
+    private Double duplicate_considered_sum()
+    {
+        Double sum = 0.0;
+
+        Double[] zones = {zone1, zone2, zone3, zone4, zone5,
+                          zone6, zone7, zone8, zone9, zone10,
+                          zone11, zone12, zone13, zone14, zone15,
+                          zone16, zone17, zone18, zone19, zone20,
+                          zone21, zone22, zone23, zone24, zone25};
+
+        List<Integer> twoTimes = List.of(3, 8, 11, 12, 14, 15, 18, 23);
+        for(int i = 0; i<25; i++){
+            if(zones[i] != null)
+                if(twoTimes.contains(i))
+                    sum += zones[i] * 2;
+                else if(i == 13)
+                    sum += zones[i] * 4;
+                else
+                    sum += zones[i];
         }
 
         return Double.parseDouble(String.format("%.3f", sum));
