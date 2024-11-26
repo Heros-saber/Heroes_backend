@@ -1,5 +1,6 @@
 package database.architecture.backend.domain.analysis.batter.service;
 
+import database.architecture.backend.domain.analysis.batter.dto.BatterAnalysisDTO;
 import database.architecture.backend.domain.entity.BatterStat;
 import database.architecture.backend.domain.entity.BatterZoneStat;
 import database.architecture.backend.domain.entity.Player;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,8 +22,16 @@ public class BatterAnalysisService {
     private final BatterStatRepository statRepository;
     private final PlayerRepository playerRepository;
 
-    public String one_line_analysis(String name){
+    public BatterAnalysisDTO.BatterAnalyzeResponse analyzeBatter(String name){
         Player player = playerRepository.findPlayerByPlayerName(name);
+        String oneLineAnalysis = one_line_analysis(player);
+        String recommended = crisisAnalyze(player).split(" ")[3];
+        recommended = recommended.substring(0, recommended.length() - 1);
+        List<BatterAnalysisDTO.BatterZoneDTO> zoneStat = crisisZone(player, recommended);
+
+        return BatterAnalysisDTO.BatterAnalyzeResponse.builder().one_line_analysis(oneLineAnalysis).zoneStatDTO(zoneStat).build();
+    }
+    public String one_line_analysis(Player player){
         BatterStat batterStat = statRepository.findBatterStatByPlayerAndYear(player, "2024");
         BatterZoneStat count = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "카운트", "ops");
         BatterZoneStat finishing = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "결정구", "ops");
@@ -307,5 +317,53 @@ public class BatterAnalysisService {
         } else {
             return "커브에 약합니다. 결정구로 던질 경우 아웃을 잡을 확률은 " + curve_out + "% 입니다.";
         }
+    }
+
+    public List<BatterAnalysisDTO.BatterZoneDTO> crisisZone(Player player, String crisis){
+        List<BatterZoneStat> fastballZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "패스트볼");
+        List<BatterZoneStat> sliderZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "슬라이더");
+        List<BatterZoneStat> changeupZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "체인지업");
+        List<BatterZoneStat> curveZone = zoneStatRepository.findAllByPlayerAndCircumstance(player, "커브");
+        BatterZoneStat countAvg = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "카운트", "타율");
+        BatterZoneStat Avg_2S = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "결정구", "타율");
+        BatterZoneStat vs_right = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "우투", "타율");
+        BatterZoneStat vs_left = zoneStatRepository.findBatterZoneStatByPlayerAndCircumstanceAndTag(player, "좌투", "타율");
+
+        BatterAnalysisDTO.BatterZoneDTO count_avg_zone = new BatterAnalysisDTO.BatterZoneDTO(countAvg);
+        count_avg_zone.setTitle("유리한 카운트에서 타율");
+        BatterAnalysisDTO.BatterZoneDTO avg_2S_zone = new BatterAnalysisDTO.BatterZoneDTO(Avg_2S);
+        avg_2S_zone.setTitle("불리한 카운트에서 타율");
+
+        BatterZoneStat crisisSwing = null;
+        BatterZoneStat crisisContact = null;
+        BatterZoneStat crisisAvg = null;
+
+        if ("패스트볼".equals(crisis)) {
+            crisisSwing = fastballZone.get(0);
+            crisisContact = fastballZone.get(1);
+            crisisAvg = fastballZone.get(2);
+        } else if ("슬라이더".equals(crisis)) {
+            crisisSwing = sliderZone.get(0);
+            crisisContact = sliderZone.get(1);
+            crisisAvg = sliderZone.get(2);
+        } else if ("체인지업".equals(crisis)) {
+            crisisSwing = changeupZone.get(0);
+            crisisContact = changeupZone.get(1);
+            crisisAvg = changeupZone.get(2);
+        } else if ("커브".equals(crisis)) {
+            crisisSwing = curveZone.get(0);
+            crisisContact = curveZone.get(1);
+            crisisAvg = curveZone.get(2);
+        }
+
+        List<BatterAnalysisDTO.BatterZoneDTO> crisisZoneList = new ArrayList<>();
+        crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(crisisSwing, crisisContact));
+        crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(crisisAvg));
+        crisisZoneList.add(count_avg_zone);
+        crisisZoneList.add(avg_2S_zone);
+        crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(vs_left));
+        crisisZoneList.add(new BatterAnalysisDTO.BatterZoneDTO(vs_right));
+
+        return crisisZoneList;
     }
 }

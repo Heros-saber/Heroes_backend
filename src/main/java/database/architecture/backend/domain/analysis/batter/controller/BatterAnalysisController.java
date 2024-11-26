@@ -17,7 +17,8 @@ public class BatterAnalysisController {
     @GetMapping("/{name}")
     public ResponseEntity<?> test(@PathVariable String name){
 
-        return ResponseEntity.ok(service.one_line_analysis(name));
+        return ResponseEntity.ok(service.analyzeBatter(name));
+
     }
 
 }
