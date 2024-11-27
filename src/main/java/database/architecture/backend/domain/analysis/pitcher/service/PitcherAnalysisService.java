@@ -219,19 +219,19 @@ public class PitcherAnalysisService {
         crisisZoneList.add(avg_2S_zone);
         crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(vs_left));
         crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(vs_right));
-        if (!fastballZone.isEmpty()) {
+        if (fastballZone.size() >= 2) {
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(fastballZone.get(0)));
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(fastballZone.get(1)));
         }
-        if (!sliderZone.isEmpty()) {
+        if (sliderZone.size() >= 2) {
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(sliderZone.get(0)));
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(sliderZone.get(1)));
         }
-        if (!changeupZone.isEmpty()) {
+        if (changeupZone.size() >= 2) {
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(changeupZone.get(0)));
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(changeupZone.get(1)));
         }
-        if (!curveZone.isEmpty()) {
+        if (curveZone.size() >= 2) {
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(curveZone.get(0)));
             crisisZoneList.add(new PitcherAnalysisDTO.PitcherZoneDTO(curveZone.get(1)));
         }
