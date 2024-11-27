@@ -19,6 +19,15 @@ public class BatterCrawlingController {
     private final PlayerCrawlingService playerCrawlingService;
     private final BatterCrawlingService batterCrawlingService;
 
+    @PostMapping("/image/{name}")
+    public ResponseEntity<?> imageCrawling(@PathVariable String name){
+        try{
+            playerCrawlingService.crawlAndDownloadImage("키움", name);
+            return ResponseEntity.ok("ok");
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @PostMapping("/{name}")
     public ResponseEntity<?> saveBatter(@PathVariable String name) throws IOException {
         try{

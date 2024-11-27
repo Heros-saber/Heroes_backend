@@ -34,6 +34,8 @@ public class Player {
     @Column(nullable = false)
     private Boolean playerThrowSide;
 
+    private String playerImage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamId")
     private Team team;

@@ -172,13 +172,14 @@ public class PitcherCrawlingService {
             playerId = playerCrawlingService.getPlayerId(name);
 
         PlayerInfoDTO playerInfo = playerCrawlingService.getPlayerInfo(playerId);
+        String playerImage = playerCrawlingService.crawlAndDownloadImage(playerInfo.getPlayerTeam(), name);
         List<PitcherStatsDTO> pitcherStats = getPitcherStats(playerId);
         List<PitcherZoneDTO> pitcherZoneStats = getPitcherZoneStats(playerId);
 
         Team team = teamRepository.findTeamByTeamName(playerInfo.getPlayerTeam());
         Player player = playerRepository.save(Player.builder()
                 .playerName(name).playerBorn(playerInfo.getPlayerBorn()).playerDraft(playerInfo.getPlayerDraft()).playerPos(parsePosition(playerInfo.getPlayerPos()))
-                .playerThrowSide(playerInfo.isPlayerThrowSide()).playerBattingSide(playerInfo.isPlayerBattingSide()).team(team).build());
+                .playerThrowSide(playerInfo.isPlayerThrowSide()).playerBattingSide(playerInfo.isPlayerBattingSide()).playerImage(playerImage).team(team).build());
 
         for (PitcherStatsDTO pitcherStat : pitcherStats) {
             pitcherStatRepository.save(pitcherStat.toEntity(player));

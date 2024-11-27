@@ -9,6 +9,11 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -69,5 +74,37 @@ public class PlayerCrawlingService {
     private LocalDate parseLocalDate(String born){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
         return LocalDate.parse(born, formatter);
+    }
+
+    public String crawlAndDownloadImage(String teamName, String name) {
+        if(!teamName.equals("키움"))
+            return null;
+        try {
+            String url = "https://heroesbaseball.co.kr/players/all/list.do?searchType=name&searchPlayFlag=&searchWord=" + name;
+            Document document = Jsoup.connect(url).get();
+
+            Element imgElement = document.selectFirst("ul.playerList li img");
+            if (imgElement != null) {
+                String imgSrc = imgElement.attr("src");
+
+                String baseUrl = "https://heroesbaseball.co.kr";
+                String absoluteImgUrl = imgSrc.startsWith("http") ? imgSrc : baseUrl + imgSrc;
+                return absoluteImgUrl;
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+
+    private void downloadImage(String imgUrl, String outputFilePath) {
+        try (InputStream in = new URL(imgUrl).openStream()) {
+            Files.copy(in, Paths.get(outputFilePath));
+        } catch (IOException e) {
+            System.err.println("Failed to download image: " + e.getMessage());
+        }
     }
 }
