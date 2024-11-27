@@ -60,6 +60,7 @@ public class PlayerDTO {
         private String playerDraft;
         private String playerPos;
         private String team;
+        private String playerImage;
     }
 
     @Builder

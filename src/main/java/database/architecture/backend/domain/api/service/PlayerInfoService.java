@@ -38,6 +38,7 @@ public class PlayerInfoService {
                 .playerDraft(player.getPlayerDraft())
                 .playerPos(parsePosition(player.getPlayerPos()))
                 .team(player.getTeam().getTeamName())
+                .playerImage(player.getPlayerImage())
                 .build();
     }
 
