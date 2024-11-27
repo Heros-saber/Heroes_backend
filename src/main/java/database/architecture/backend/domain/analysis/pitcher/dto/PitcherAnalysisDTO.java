@@ -56,7 +56,10 @@ public class PitcherAnalysisDTO {
         public void setTitle(String title) {this.circumstance = title;}
         public void setTag(String tag) {this.tag = tag;}
         public PitcherZoneDTO(PitcherZoneStat pitcherZoneStat){
-            this.tag = pitcherZoneStat.getTag();
+            if(pitcherZoneStat.getTag().equals("타율"))
+                this.tag = "피안타율";
+            else
+                this.tag = pitcherZoneStat.getTag();
             this.circumstance = pitcherZoneStat.getCircumstance() + " " + this.tag;
             this.zone1 = pitcherZoneStat.getZone1();
             this.zone2 = pitcherZoneStat.getZone2();

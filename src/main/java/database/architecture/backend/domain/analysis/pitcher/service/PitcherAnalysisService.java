@@ -209,9 +209,9 @@ public class PitcherAnalysisService {
         PitcherZoneStat vs_left = zoneStatRepository.findPitcherZoneStatByPlayerAndCircumstanceAndTag(player, "좌타", "타율");
 
         PitcherAnalysisDTO.PitcherZoneDTO count_avg_zone = new PitcherAnalysisDTO.PitcherZoneDTO(countAvg);
-        count_avg_zone.setTitle("유리한 카운트에서 타율");
+        count_avg_zone.setTitle("유리한 카운트에서 피안타율");
         PitcherAnalysisDTO.PitcherZoneDTO avg_2S_zone = new PitcherAnalysisDTO.PitcherZoneDTO(Avg_2S);
-        avg_2S_zone.setTitle("불리한 카운트에서 타율");
+        avg_2S_zone.setTitle("불리한 카운트에서 피안타율");
 
 
         List<PitcherAnalysisDTO.PitcherZoneDTO> crisisZoneList = new ArrayList<>();
