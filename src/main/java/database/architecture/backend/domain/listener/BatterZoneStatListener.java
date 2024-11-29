@@ -4,7 +4,7 @@ import database.architecture.backend.domain.entity.BatterZoneStat;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
-public class BatterZoneStatListener {
+public class BatterZoneStatListener { // 각 존에서 타율을 계산하여 1.0을 초과하면 예외가 발생
 
     @PrePersist
     @PreUpdate
