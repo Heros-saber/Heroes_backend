@@ -1,5 +1,6 @@
 package database.architecture.backend.domain.entity;
 
+import database.architecture.backend.domain.listener.PitcherZoneStatListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,9 +8,11 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EntityListeners(PitcherZoneStatListener.class)
 public class PitcherZoneStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

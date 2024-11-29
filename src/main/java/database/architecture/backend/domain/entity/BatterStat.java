@@ -1,5 +1,6 @@
 package database.architecture.backend.domain.entity;
 
+import database.architecture.backend.domain.listener.BatterStatListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EntityListeners(BatterStatListener.class)
 public class BatterStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
