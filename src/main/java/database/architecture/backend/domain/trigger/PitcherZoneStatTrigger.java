@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.listener;
+package database.architecture.backend.domain.trigger;
 
 import database.architecture.backend.domain.entity.PitcherZoneStat;
 import jakarta.persistence.PostPersist;
@@ -6,7 +6,7 @@ import jakarta.persistence.PostUpdate;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
-public class PitcherZoneStatListener {
+public class PitcherZoneStatTrigger {
 
     @PrePersist
     @PreUpdate

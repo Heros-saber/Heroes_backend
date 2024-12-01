@@ -1,6 +1,6 @@
 package database.architecture.backend.domain.entity;
 
-import database.architecture.backend.domain.listener.BatterZoneStatListener;
+import database.architecture.backend.domain.trigger.BatterZoneStatTrigger;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EntityListeners(BatterZoneStatListener.class)
+@EntityListeners(BatterZoneStatTrigger.class)
 public class BatterZoneStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

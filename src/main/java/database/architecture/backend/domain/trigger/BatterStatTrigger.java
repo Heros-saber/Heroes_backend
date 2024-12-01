@@ -1,4 +1,4 @@
-package database.architecture.backend.domain.listener;
+package database.architecture.backend.domain.trigger;
 
 import database.architecture.backend.domain.entity.BatterStat;
 import jakarta.persistence.PrePersist;
@@ -7,7 +7,7 @@ import jakarta.persistence.PreUpdate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class BatterStatListener {
+public class BatterStatTrigger {
 
     @PrePersist
     @PreUpdate
